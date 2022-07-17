@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
-
+from product_tracker.models import Product
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -54,7 +54,7 @@ class User(AbstractUser):
     
     pause_email_alerts = models.BooleanField(default=False)
 
-    # todo: add products field
+    products = models.ManyToManyField(Product)
 
     objects = UserManager()
 
