@@ -22,4 +22,5 @@ urlpatterns = [
 
 urlpatterns += [
     path('', include('product_tracker.urls')),
+    path('', include ('users.urls'))
 ]

@@ -36,22 +36,22 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    
-    EMAIL_ALERT_FREQUENCY_CHOICES = [('d', 'daily'), 
+
+    EMAIL_ALERT_FREQUENCY_CHOICES = [('d', 'daily'),
                                ('w', 'weekly'),]
-    email_alert_frequency = models.CharField(max_length=1, choices=EMAIL_ALERT_FREQUENCY_CHOICES, default='daily')
-    
-    EMAIL_ALERT_DAY_OF_WEEK_CHOICES = [('mon', 'Monday'), 
+    email_alert_frequency = models.CharField(max_length=1, choices=EMAIL_ALERT_FREQUENCY_CHOICES, default='d')
+
+    EMAIL_ALERT_DAY_OF_WEEK_CHOICES = [('mon', 'Monday'),
                                        ('tue', 'Tuesday'),
                                        ('wed', 'Wednesday'),
                                        ('thu', 'Thursday'),
                                        ('fri', 'Friday'),
                                        ('sat', 'Saturday'),
                                        ('sun', 'Sunday'),]
-                               
-    
+
+
     email_alert_day_of_week = models.CharField(max_length=3, choices=EMAIL_ALERT_DAY_OF_WEEK_CHOICES, default='fri')
-    
+
     pause_email_alerts = models.BooleanField(default=False)
 
     products = models.ManyToManyField(Product)
