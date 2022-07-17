@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block title %}<title>Tracked Products</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+  {% comment %} {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {% endcomment %}
+</head>
+<body>
+    <p>Product: {{ product.name }}</p>
+    <p>Current Price: {{ product.current_price }}</p>
+    <p>Was Price: {{ product.was_price }}</p>
+    <p>Savings: {{ product.savings }}</p>
+    <p>Last Checked: {{ product.last_price_check }}</p>
+</body>
+</html>
