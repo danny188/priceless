@@ -1,10 +1,10 @@
 from decimal import Decimal
 from django.db import models
 
-from users.models import User
-
 import requests
 from datetime import datetime
+
+import re
 
 class Product(models.Model):
     def __init__(self, url):
@@ -39,7 +39,21 @@ class WoolworthsProduct(Product):
     def fetch_data(cls, url):
         response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS)
         json = response.json()
-        return json
+        return json        
+    
+    def get_api_endpoint(self):
+        def get_stock_code(url):
+            pattern = r"productdetails/(\d*)?"
+            match = re.search(pattern, url)
+            if match:
+                stock_code = match.group(1)
+            else:
+                stock_code = None
+                
+            return stock_code
+               
+        stock_code = get_stock_code(self.url)
+        return f"https://www.woolworths.com.au/apis/ui/product/detail/{stock_code}"
 
     @classmethod
     def parse_data(self, json):
@@ -52,7 +66,8 @@ class WoolworthsProduct(Product):
             self.on_sale = True
         
     def fetch_price(self):
-        json = WoolworthsProduct.fetch_data(self.url)
+        api_endpoint = self.get_api_endpoint()
+        json = WoolworthsProduct.fetch_data(api_endpoint)
         self.parse_data(json)
     
     def savings(self):
