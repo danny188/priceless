@@ -77,8 +77,10 @@
             <li><strong>Priceless</strong></li>
         </ul>
         <ul>
+            {% if user.is_authenticated %}
             <li><a href="/products">Tracker</a></li>
             <li><a href="#">Settings</a></li>
+            {% endif %}
             <li><a href="#">About</a></li>
             {% if user.is_authenticated %}
             <li><a href="/accounts/logout" role="button">Logout ({{ user.email }})</a></li>
