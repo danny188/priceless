@@ -1,0 +1,47 @@
+[33mcommit 8a7e487f43aa74a447b01731b46bd3b06b92c9d7[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 20:28:05 2022 +1000
+
+    add basic user register page
+
+[33mcommit 132f18c84658c6c008011100e3d353a2da8ee94d[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 19:27:02 2022 +1000
+
+    add view to display 1 product
+
+[33mcommit 98f27bff5287a5f8fd8d154de6031096214edbc0[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 19:24:12 2022 +1000
+
+    refactor WoolworthsProduct to init with product url instead of api endpoint
+
+[33mcommit 308e6735029b6a0efbabae41311806adb4d35903[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 18:47:32 2022 +1000
+
+    add 'products' as many-to-many field in User model
+
+[33mcommit d9c40fb4bf41840bec80c603efddbd49dd1dbeaf[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 18:44:50 2022 +1000
+
+    add product_tracker app and product models
+
+[33mcommit 1bdd3fadbbf7211b38032c2fc61c2454b900efe5[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 18:37:37 2022 +1000
+
+    start using django-environ to store secrets
+
+[33mcommit bab664cca2d958ccb16b297f8ee783252d0a3b10[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 15:49:15 2022 +1000
+
+    changed db to postgres and added .gitignore file
+
+[33mcommit e1a29f2b771b3fcd5801e5775e21f77d092e5d33[m
+Author: danny188 <dyhh12@gmail.com>
+Date:   Sun Jul 17 15:15:51 2022 +1000
+
+    created custom user model and applied migrations

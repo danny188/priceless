@@ -1,0 +1,42 @@
+nav {
+    margin: 0 15px;
+}
+
+form.auth-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+form.product-url-update {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+form.product-url-update input[type="submit"] {
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: 15%;
+}
+
+form.product-url-update input[name="url"] {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 85%;
+}
+
+.product-thumbnail {
+    margin: 3px;
+}
+
+.on-sale {
+    color: orangered;
+}
+
+.center {
+    text-align: center;
+}
+
+.width-small {
+    max-width: 400px;
+}
