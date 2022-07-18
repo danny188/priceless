@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.db import models
+from users.models import User
 
 import requests
 from datetime import datetime
@@ -23,6 +24,7 @@ class Product(models.Model):
         if self.was_price and self.current_price:
             return round(self.savings_dollars() / self.was_price * 100)
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class WoolworthsProduct(Product):
     class Meta:

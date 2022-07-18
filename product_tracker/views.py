@@ -16,7 +16,7 @@ def products_view(request):
 
     # request.user.products.add(bacon)
 
-    products = sorted(request.user.products.all().order_by('name'), key = lambda p: -p.savings_dollars())
+    products = sorted(request.user.product_set.all().order_by('name'), key = lambda p: -p.savings_dollars())
 
     # charcoal = products.get(pk=10)
     # charcoal.image_url = 'https://cdn0.woolworths.media/content/wowproductimages/small/176564.jpg'
@@ -34,9 +34,12 @@ def products_view(request):
 
 def add_product_view(request):
     if request.method == "POST":
+        # todo check duplicate url
         new_url = request.POST.get("new_url")
-        new_woolworths_product = WoolworthsProduct(url=new_url)
-        new_woolworths_product.fetch_price()
-        new_woolworths_product.save()
-        request.user.products.add(new_woolworths_product)
+        # new_woolworths_product = WoolworthsProduct(url=new_url)
+
+        product = WoolworthsProduct.objects.create(url=new_url, user=request.user)
+        product.fetch_price()
+        product.save()
+
         return HttpResponseRedirect('/products')
