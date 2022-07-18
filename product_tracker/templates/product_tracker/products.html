@@ -16,7 +16,7 @@
 <section class="tracked-products">
   <h1>Tracked Products ({{ products | length }})</h1>
 
-  {% for product in products %}
+  {% for product in page_obj %}
   <div class="product">
     <div class="product-row-one">
       {% if product.image_url %}
@@ -47,6 +47,24 @@
 
   <hr>
   {% endfor %}
+
+  <div class="pagination center">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a class="outline secondary" role="button" href="?page=1">&laquo; first</a>
+            <a class="outline secondary" role="button" href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a role="button" class="outline secondary" href="?page={{ page_obj.next_page_number }}">next</a>
+            <a role="button" class="outline secondary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 </section>
 
 

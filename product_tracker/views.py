@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct
+from django.core.paginator import Paginator
 
 @login_required
 def products_view(request):
@@ -21,7 +22,12 @@ def products_view(request):
     # charcoal.image_url = 'https://cdn0.woolworths.media/content/wowproductimages/small/176564.jpg'
     # charcoal.save()
 
-    context = {'products': products}
+    paginator = Paginator(products, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'products': products, 'page_obj': page_obj}
 
     return render(request, "product_tracker/products.html", context=context)
 

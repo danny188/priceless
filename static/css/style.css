@@ -50,3 +50,7 @@ form#product-url-update input[name="url"] {
 .width-small {
     max-width: 400px;
 }
+
+.pagination {
+    margin-top: 40px;
+}
