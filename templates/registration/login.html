@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1 class="center">Log In</h1>
-<form method="POST" class="form-group auth-form">
+<form method="POST" class="form-group narrow-form">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-success">Log In</button>

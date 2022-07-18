@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<h1 class="center">Your Settings</h1>
+<form method="POST" class="form-group narrow-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+
+{% endblock %}

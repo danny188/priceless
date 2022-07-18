@@ -1,8 +1,9 @@
 # views.py
 from django.shortcuts import render, redirect
-from .forms import RegisterForm
+from .forms import RegisterForm, UpdateUserSettingsForm
 from django.views import generic
-
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 class RegisterView(generic.CreateView):
     form_class = RegisterForm
@@ -11,3 +12,16 @@ class RegisterView(generic.CreateView):
 
 
 
+@login_required
+def update_user_settings(request):
+    if request.method == 'POST':
+        form = UpdateUserSettingsForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect('update-settings')
+    else:
+        form = UpdateUserSettingsForm(instance=request.user)
+
+    return render(request, 'users/settings.html', {'form': form})

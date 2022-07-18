@@ -50,7 +50,7 @@ class User(AbstractUser):
                                        ('sun', 'Sunday'),]
 
 
-    email_alert_day_of_week = models.CharField(max_length=3, choices=EMAIL_ALERT_DAY_OF_WEEK_CHOICES, default='fri')
+    email_alert_day_of_week = models.CharField(verbose_name="Day of week to email (applies only if email frequency is weekly)", max_length=3, choices=EMAIL_ALERT_DAY_OF_WEEK_CHOICES, default='fri')
 
     pause_email_alerts = models.BooleanField(default=False)
 
