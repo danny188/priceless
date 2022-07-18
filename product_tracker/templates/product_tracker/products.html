@@ -29,10 +29,11 @@
       {% endif %}
     </div>
 
-    <form id="product-url-update">
+    <form id="product-url-update" action="/product/update" method="POST">
       {% csrf_token %}
-      <input type="text" name="url" value={{ product.url }}>
+      <input type="text" name="updated_url" value={{ product.url }}>
       <input type="submit" role="button" value="Update URL">
+      <input type="hidden" name="product_pk" value={{ product.id }}>
     </form>
 
     <div class="price-details grid">

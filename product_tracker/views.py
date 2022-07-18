@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from product_tracker.models import WoolworthsProduct
+from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 
 @login_required
@@ -39,6 +39,16 @@ def add_product_view(request):
         # new_woolworths_product = WoolworthsProduct(url=new_url)
 
         product = WoolworthsProduct.objects.create(url=new_url, user=request.user)
+        product.fetch_price()
+        product.save()
+
+        return HttpResponseRedirect('/products')
+
+def update_product_view(request):
+    if request.method == "POST":
+        product_id = request.POST.get("product_pk")
+        product = WoolworthsProduct.objects.get(pk=product_id)
+        product.url = request.POST.get("updated_url")
         product.fetch_price()
         product.save()
 
