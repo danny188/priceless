@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct
@@ -23,3 +24,13 @@ def products_view(request):
     context = {'products': products}
 
     return render(request, "product_tracker/products.html", context=context)
+
+
+def add_product_view(request):
+    if request.method == "POST":
+        new_url = request.POST.get("new_url")
+        new_woolworths_product = WoolworthsProduct(url=new_url)
+        new_woolworths_product.fetch_price()
+        new_woolworths_product.save()
+        request.user.products.add(new_woolworths_product)
+        return HttpResponseRedirect('/products')

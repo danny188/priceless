@@ -3,39 +3,51 @@
 {% block title %}Tracked Products{% endblock %}
 
 {% block content %}
-<h1>Tracked Products ({{ products | length }})</h1>
 
-{% for product in products %}
-<div class="product">
-  <div class="product-row-one">
-    {% if product.image_url %}
-    <img class="product-thumbnail" src={{ product.image_url }}>
-    {% endif %}
-    {% if product.savings_dollars %}
-    <strong class="on-sale">{{ product.name }} (on sale)</strong>
-    {% else %}
-    <strong>{{ product.name }}</strong>
-    {% endif %}
-  </div>
-
-  <form class="product-url-update">
-    <input type="text" name="url" value={{ product.url }}>
-    <input type="submit" role="button" value="Update URL">
+<section class="add-product">
+  <h1>Add Product</h1>
+  <form id="product-url-update" action="/products/add" method="POST">
+    {% csrf_token %}
+    <input type="text" name="new_url" placeholder="Enter product URL here">
+    <input type="submit" role="button" value="Add">
   </form>
+</section>
 
-  <div class="price-details grid">
-    <div>Price: ${{ product.current_price }}</div>
-    <div>{% if product.savings_dollars %}Was: ${{ product.was_price }}{% endif %}</div>
-    <div>Savings: ${{ product.savings_dollars }} ({{ product.savings_percentage }}%)</div>
-    <div>Last Checked: {{ product.last_price_check }}</div>
-    <div></div>
-    <div><button class="remove-product outline">Remove</button></div>
+<section class="tracked-products">
+  <h1>Tracked Products ({{ products | length }})</h1>
+
+  {% for product in products %}
+  <div class="product">
+    <div class="product-row-one">
+      {% if product.image_url %}
+      <img class="product-thumbnail" src={{ product.image_url }}>
+      {% endif %}
+      {% if product.savings_dollars %}
+      <strong class="on-sale">{{ product.name }} (on sale)</strong>
+      {% else %}
+      <strong>{{ product.name }}</strong>
+      {% endif %}
+    </div>
+
+    <form id="product-url-update">
+      {% csrf_token %}
+      <input type="text" name="url" value={{ product.url }}>
+      <input type="submit" role="button" value="Update URL">
+    </form>
+
+    <div class="price-details grid">
+      <div>Price: ${{ product.current_price }}</div>
+      <div>{% if product.savings_dollars %}Was: ${{ product.was_price }}{% endif %}</div>
+      <div>Savings: ${{ product.savings_dollars }} ({{ product.savings_percentage }}%)</div>
+      <div>Last Checked: {{ product.last_price_check }}</div>
+      <div></div>
+      <div><button class="remove-product outline">Remove</button></div>
+    </div>
   </div>
-</div>
 
-<hr>
-{% endfor %}
-
+  <hr>
+  {% endfor %}
+</section>
 
 
 

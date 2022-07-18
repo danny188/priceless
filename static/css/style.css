@@ -7,19 +7,19 @@ form.auth-form {
     margin: 0 auto;
 }
 
-form.product-url-update {
+form#product-url-update {
     display: flex;
     gap: 10px;
     margin-bottom: 0;
 }
 
-form.product-url-update input[type="submit"] {
+form#product-url-update input[type="submit"] {
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: 15%;
 }
 
-form.product-url-update input[name="url"] {
+form#product-url-update input[name="url"] {
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 85%;
