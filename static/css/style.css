@@ -25,6 +25,16 @@ form.product-url-update input[name="url"] {
     flex-basis: 85%;
 }
 
+.remove-product {
+    color: red;
+    border-color: red;
+}
+
+.remove-product:hover {
+    color: white;
+    background-color: red;;
+}
+
 .product-thumbnail {
     margin: 3px;
 }

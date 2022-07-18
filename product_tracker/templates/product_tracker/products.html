@@ -7,14 +7,16 @@
 
 {% for product in products %}
 <div class="product">
-  {% if product.image_url %}
-  <img class="product-thumbnail" src={{ product.image_url }}>
-  {% endif %}
-  {% if product.savings_dollars %}
-  <strong class="on-sale">{{ product.name }} (on sale)</strong>
-  {% else %}
-  <strong>{{ product.name }}</strong>
-  {% endif %}
+  <div class="product-row-one">
+    {% if product.image_url %}
+    <img class="product-thumbnail" src={{ product.image_url }}>
+    {% endif %}
+    {% if product.savings_dollars %}
+    <strong class="on-sale">{{ product.name }} (on sale)</strong>
+    {% else %}
+    <strong>{{ product.name }}</strong>
+    {% endif %}
+  </div>
 
   <form class="product-url-update">
     <input type="text" name="url" value={{ product.url }}>
@@ -22,10 +24,12 @@
   </form>
 
   <div class="price-details grid">
-    <div>Current Price: {{ product.current_price }}</div>
-    <div>Was Price: {{ product.was_price }}</div>
-    <div>Savings: {{ product.savings_dollars }} ({{ product.savings_percentage }}%)</div>
+    <div>Price: ${{ product.current_price }}</div>
+    <div>Was: ${{ product.was_price }}</div>
+    <div>Savings: ${{ product.savings_dollars }} ({{ product.savings_percentage }}%)</div>
     <div>Last Checked: {{ product.last_price_check }}</div>
+    <div></div>
+    <div><button class="remove-product outline">Remove</button></div>
   </div>
 </div>
 
