@@ -18,6 +18,7 @@ def products_view(request):
     # request.user.products.add(bacon)
 
     products = sorted(request.user.product_set.all().order_by('name'), key = lambda p: -p.savings_dollars())
+    on_sale_products = request.user.product_set.filter(on_sale=True)
 
     # charcoal = products.get(pk=10)
     # charcoal.image_url = 'https://cdn0.woolworths.media/content/wowproductimages/small/176564.jpg'
@@ -28,7 +29,7 @@ def products_view(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'products': products, 'page_obj': page_obj}
+    context = {'products': products, 'page_obj': page_obj, 'on_sale_products': on_sale_products}
 
     return render(request, "product_tracker/products.html", context=context)
 
@@ -56,5 +57,17 @@ def update_product_view(request):
         product.url = request.POST.get("updated_url")
         product.fetch_price()
         product.save()
+
+        return HttpResponseRedirect('/products')
+
+@login_required
+def products_refresh_all(request):
+    if request.method == "GET":
+        products = request.user.product_set.all()
+
+        for product in products:
+            product.__class__ = WoolworthsProduct
+            product.fetch_price()
+            product.save()
 
         return HttpResponseRedirect('/products')

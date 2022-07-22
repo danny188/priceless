@@ -6,7 +6,7 @@ form.narrow-form {
     max-width: 500px;
     margin: 0 auto;
 }
-
+/*
 form#product-url-update {
     display: flex;
     gap: 10px;
@@ -23,7 +23,7 @@ form#product-url-update input[name="url"] {
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 85%;
-}
+} */
 
 .remove-product {
     color: red;

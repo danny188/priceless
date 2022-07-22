@@ -73,6 +73,8 @@ class WoolworthsProduct(Product):
 
         if self.current_price != self.was_price and self.was_price:
             self.on_sale = True
+        else:
+            self.on_sale = False
 
     def fetch_price(self):
         api_endpoint = self.get_api_endpoint()
