@@ -4,24 +4,25 @@
 {% block title %}Log In{% endblock %}
 
 {% block content %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-4 is-offset-4">
+            <h1 class="title">Log In</h1>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="button">Log In</button>
 
-<div class="columns">
-    <div class="column is-4 is-offset-4">
-    <h1 class="title">Log In</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="button">Log In</button>
+                {% for message in messages %}
 
-        {% for message in messages %}
+                <div class="alert alert-success">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
 
-        <div class="alert alert-success">
-            <a class="close" href="#" data-dismiss="alert">×</a>
-            {{ message }}
+                {% endfor %}
+            </form>
         </div>
-
-        {% endfor %}
-    </form>
-</div>
-</div>
+    </div>
+</section>
 {% endblock %}

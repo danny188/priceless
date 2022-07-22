@@ -19,7 +19,7 @@ def update_user_settings(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your profile is updated successfully')
+            messages.success(request, 'Your settings are updated successfully')
             return redirect('update-settings')
     else:
         form = UpdateUserSettingsForm(instance=request.user)
