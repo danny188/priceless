@@ -1,23 +1,27 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Log In{% endblock %}
 
 {% block content %}
 
-<h1 class="center">Log In</h1>
-<form method="POST" class="form-group narrow-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Log In</button>
+<div class="columns">
+    <div class="column is-4 is-offset-4">
+    <h1 class="title">Log In</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="button">Log In</button>
 
-    {% for message in messages %}
+        {% for message in messages %}
 
-    <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-           {{ message }}
-    </div>
+        <div class="alert alert-success">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+        </div>
 
-    {% endfor %}
-</form>
-
+        {% endfor %}
+    </form>
+</div>
+</div>
 {% endblock %}
