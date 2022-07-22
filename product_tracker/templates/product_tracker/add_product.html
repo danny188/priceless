@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<section class="section add-product">
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+            <h1 class="title">Add Product For Price Tracking</h1>
+            <form id="add-product" action="/products/add" method="POST">
+
+                {% csrf_token %}
+                <div class="field is-grouped">
+                    <div class="control is-expanded is-one-third">
+                        <input class="input" type="text" name="new_url" placeholder="Enter product URL here">
+                    </div>
+
+                    <div class="control">
+                        <input type="submit" class="button" value="Add">
+                    </div>
+                </div>
+
+
+                {% for message in messages %}
+                <div class="notification {{ message.tags }}">
+                    <a class="delete" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

@@ -14,12 +14,10 @@
                 <button type="submit" class="button">Log In</button>
 
                 {% for message in messages %}
-
-                <div class="alert alert-success">
-                    <a class="close" href="#" data-dismiss="alert">×</a>
+                <div class="notification {{ message.tags }}">
+                    <a class="delete" href="#" data-dismiss="alert">×</a>
                     {{ message }}
                 </div>
-
                 {% endfor %}
             </form>
         </div>

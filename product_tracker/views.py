@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 @login_required
 def products_view(request):
@@ -42,7 +43,11 @@ def add_product_view(request):
         product.fetch_price()
         product.save()
 
-        return HttpResponseRedirect('/products')
+        messages.success(request, product.name + ' has been added.', extra_tags="is-success is-light")
+        # return HttpResponseRedirect('/products')
+        return render(request, "product_tracker/add_product.html")
+    else:
+        return render(request, "product_tracker/add_product.html")
 
 def update_product_view(request):
     if request.method == "POST":
