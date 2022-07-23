@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#refresh-all-products')) {
         document.querySelector('#refresh-all-products').addEventListener('click', (event) => {
             let numProducts = parseInt(document.querySelector('#num-of-products').textContent, 10);
-            let AVERAGE_API_RESPONSE_TIME_PER_PRODUCT = 0.8; // measured in seconds
+            let AVERAGE_API_RESPONSE_TIME_PER_PRODUCT = 1; // measured in seconds
 
             document.querySelector('#updating-products-label').classList.remove('is-hidden');
             document.querySelector('#updating-products-progress-bar').classList.remove('is-hidden');
