@@ -2,28 +2,6 @@ nav {
     margin: 0 15px;
 }
 
-form.narrow-form {
-    max-width: 500px;
-    margin: 0 auto;
-}
-/*
-form#product-url-update {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 0;
-}
-
-form#product-url-update input[type="submit"] {
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: 15%;
-}
-
-form#product-url-update input[name="url"] {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: 85%;
-} */
 
 .remove-product {
     color: red;
@@ -57,4 +35,8 @@ form#product-url-update input[name="url"] {
 
 #updating-products-label {
     margin-top: 10px;
+}
+
+hr {
+    margin: 40px auto 20px;
 }
