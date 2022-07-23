@@ -83,3 +83,21 @@ def delete_product_view(request):
             product.delete()
 
         return HttpResponseRedirect('/products')
+
+@login_required
+def update_product_url_view(request):
+
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        new_url = request.POST.get("updated_url")
+
+        product = request.user.product_set.get(pk=product_id)
+
+        if product:
+            product.__class__ = WoolworthsProduct
+            product.url = new_url
+            product.fetch_price()
+            product.save()
+            context = {'product': product}
+
+            return render(request, 'product_tracker/single_product.html', context=context)

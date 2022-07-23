@@ -20,4 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#update-all-products-approx-time').innerHTML = Math.round(numProducts * AVERAGE_API_RESPONSE_TIME_PER_PRODUCT);
         });
     }
+
+    // display spinner when update-url-button is pressed
+    document.querySelector('.section.products').addEventListener('click', (e) => {
+        if (e.target.classList.contains("update-url-button")) {
+            e.target.classList.add("is-loading");
+        }
+    });
   });

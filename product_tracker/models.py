@@ -18,7 +18,9 @@ class Product(models.Model):
 
     def savings_dollars(self):
         if self.was_price and self.current_price:
-            return abs(self.was_price - self.current_price)
+            return round(abs(self.was_price - self.current_price), 2)
+        else:
+            return 0
 
     def savings_percentage(self):
         if self.was_price and self.current_price:
