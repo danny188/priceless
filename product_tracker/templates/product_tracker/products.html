@@ -35,7 +35,7 @@
   <div class="product">
     <div class="columns">
       {% if product.savings_dollars %}
-      <a href="{{product.url}}"><strong class="on-sale">{{ product.name }} (on sale)</strong></a>
+      <a href="{{product.url}}"><strong class="on-sale">{{ product.name }} <span class="tag is-warning">on sale</span></strong></a>
       {% else %}
       <a href="{{product.url}}"><strong>{{ product.name }}</strong></a>
       {% endif %}
