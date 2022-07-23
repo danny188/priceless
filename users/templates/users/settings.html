@@ -9,20 +9,28 @@
     <div class="columns">
         <div class="column is-4 is-offset-4">
         <h1 class="title">Your Settings</h1>
+            <div class="field">
+                <a href="/accounts/password_change" class="button is-light">Change your password</a>
+            </div>
             <form method="POST" class="">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="button is-info">Save</button>
 
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                <div class="field">
+                    <button type="submit" class="button is-info">Save</button>
+                </div>
+
+                {% for message in messages %}
+                <div class="notification {{ message.tags }}">
+                    <a class="delete" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
+                {% endfor %}
+
             </form>
+
         </div>
+
     </div>
 </section>
 

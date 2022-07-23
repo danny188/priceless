@@ -11,8 +11,16 @@
             <form method="POST" class="">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="button is-info">Register</button>
+                <div class="field">
+                    <button type="submit" class="button is-info">Register</button>
+                </div>
             </form>
+            {% for message in messages %}
+            <div class="notification {{ message.tags }}">
+                <a class="delete" href="#" data-dismiss="alert">×</a>
+                {{ message }}
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
