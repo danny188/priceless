@@ -93,8 +93,8 @@
   <div class="pagination center">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a class="outline secondary" role="button" href="?page=1">&laquo; first</a>
-            <a class="outline secondary" role="button" href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a class="button is-light" href="?page=1">&laquo; first</a>
+            <a class="button is-light" href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -102,8 +102,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a role="button" class="outline secondary" href="?page={{ page_obj.next_page_number }}">next</a>
-            <a role="button" class="outline secondary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a class="button is-light" class="outline secondary" href="?page={{ page_obj.next_page_number }}">next</a>
+            <a class="button is-light" class="outline secondary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
