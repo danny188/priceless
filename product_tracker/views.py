@@ -71,3 +71,15 @@ def products_refresh_all(request):
             product.save()
 
         return HttpResponseRedirect('/products')
+
+
+@login_required
+def delete_product_view(request):
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        product = request.user.product_set.get(pk=product_id)
+
+        if product:
+            product.delete()
+
+        return HttpResponseRedirect('/products')

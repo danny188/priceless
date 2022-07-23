@@ -2,17 +2,6 @@ nav {
     margin: 0 15px;
 }
 
-
-.remove-product {
-    color: red;
-    border-color: red;
-}
-
-.remove-product:hover {
-    color: white;
-    background-color: red;;
-}
-
 .product-thumbnail {
     margin: 3px;
 }
