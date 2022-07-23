@@ -54,3 +54,7 @@ form#product-url-update input[name="url"] {
 .pagination {
     margin-top: 40px;
 }
+
+#updating-products-label {
+    margin-top: 10px;
+}

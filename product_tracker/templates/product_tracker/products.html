@@ -12,7 +12,7 @@
   <div class="level">
     <div class="level-item">
       <p class="subtitle is-5">
-        <strong>{{ products | length }}</strong> total products
+        <strong><span id="num-of-products">{{ products | length }}</span></strong> total products
       </p>
     </div>
     <div class="level-item">
@@ -21,7 +21,11 @@
       </p>
     </div>
     <div class="level-item">
-      <a href="/products/refreshall" class="button is-light is-info">Refresh Price For All Products</a>
+      <div>
+        <a href="/products/refreshall" id="refresh-all-products" class="button is-light is-info">Refresh Price For All Products</a>
+        <p id="updating-products-label" class="is-hidden"><strong>Updating products. This will take about <span id="update-all-products-approx-time"></span> seconds.</strong></p>
+        <progress id="updating-products-progress-bar" class="progress is-small is-primary is-hidden" max="100"></progress>
+      </div>
     </div>
   </div>
 </section>
