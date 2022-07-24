@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
+from .tasks import refresh_all_products
 
 @login_required
 def products_view(request):
@@ -63,11 +64,7 @@ def add_product_view(request):
 @login_required
 def products_refresh_all(request):
     if request.method == "GET":
-        products = request.user.product_set.all()
-
-        for product in products:
-            product.fetch_price()
-            product.save()
+        refresh_all_products()
 
         return HttpResponseRedirect('/products')
 

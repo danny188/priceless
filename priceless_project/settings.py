@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'product_tracker',
     'crispy_forms',
     'crispy_bulma',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,24 @@ LOGIN_REDIRECT_URL = "/products"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"
+
+
+# celery
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+      'add-every-10-seconds': {
+        'task': 'product_tracker.tasks.adding_task',
+        'schedule': 3.0,
+        'args': (16, 16),
+        'options': {
+            'expires': 15.0,
+        },
+    },
+}
