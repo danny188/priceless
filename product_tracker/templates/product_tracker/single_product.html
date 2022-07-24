@@ -18,6 +18,7 @@
         {% endif %}
       </div>
       <div class="column">
+        <div>Shop: {{ product.shop}}</div>
         <div>Price: ${{ product.current_price|floatformat:2}}</div>
         <div>{% if product.savings_dollars %}Was: ${{ product.was_price|floatformat:2 }}{% endif %}</div>
         <div>Savings: ${{ product.savings_dollars|floatformat:2 }} ({{ product.savings_percentage }}%)</div>

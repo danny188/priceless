@@ -15,6 +15,18 @@ class Product(models.Model):
     last_price_check = models.DateTimeField(null=True)
     current_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     was_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
+    product_type_by_shop = models.CharField(max_length=200)
+    shop = models.CharField(max_length=200)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # cast to proxy model instance
+        if self.__class__ == Product:
+            for _class in Product.__subclasses__():
+                if self.product_type_by_shop == _class.__name__:
+                    self.__class__ = _class
+                    break
 
     def savings_dollars(self):
         if self.was_price and self.current_price:
@@ -45,11 +57,17 @@ class WoolworthsProduct(Product):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
     }
 
+
     @classmethod
     def fetch_data(cls, url):
         response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS)
         json = response.json()
         return json
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.product_type_by_shop = self.__class__.__name__
+        self.shop = 'Woolworths'
 
     def get_api_endpoint(self):
         def get_stock_code(url):

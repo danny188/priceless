@@ -37,28 +37,28 @@ def products_view(request):
 def add_product_view(request):
     if request.method == "POST":
         # todo check duplicate url
+        # todo check valid url
         new_url = request.POST.get("new_url")
-        # new_woolworths_product = WoolworthsProduct(url=new_url)
 
+        # todo: instantiate product class by product shop type
         product = WoolworthsProduct.objects.create(url=new_url, user=request.user)
         product.fetch_price()
         product.save()
 
         messages.success(request, product.name + ' has been added.', extra_tags="is-success is-light")
-        # return HttpResponseRedirect('/products')
-        return render(request, "product_tracker/add_product.html")
-    else:
-        return render(request, "product_tracker/add_product.html")
 
-def update_product_view(request):
-    if request.method == "POST":
-        product_id = request.POST.get("product_pk")
-        product = WoolworthsProduct.objects.get(pk=product_id)
-        product.url = request.POST.get("updated_url")
-        product.fetch_price()
-        product.save()
+    return render(request, "product_tracker/add_product.html")
 
-        return HttpResponseRedirect('/products')
+
+# def update_product_view(request):
+#     if request.method == "POST":
+#         product_id = request.POST.get("product_pk")
+#         product = WoolworthsProduct.objects.get(pk=product_id)
+#         product.url = request.POST.get("updated_url")
+#         product.fetch_price()
+#         product.save()
+
+#         return HttpResponseRedirect('/products')
 
 @login_required
 def products_refresh_all(request):
@@ -66,7 +66,6 @@ def products_refresh_all(request):
         products = request.user.product_set.all()
 
         for product in products:
-            product.__class__ = WoolworthsProduct
             product.fetch_price()
             product.save()
 
@@ -94,7 +93,6 @@ def update_product_url_view(request):
         product = request.user.product_set.get(pk=product_id)
 
         if product:
-            product.__class__ = WoolworthsProduct
             product.url = new_url
             product.fetch_price()
             product.save()
