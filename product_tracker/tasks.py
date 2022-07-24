@@ -25,3 +25,13 @@ def refresh_all_products():
     result = job.apply_async(expires=120)
 
     result.join()
+
+@shared_task
+def refresh_all_products_for_user(user):
+    products = user.product_set.all()
+
+    job = group([refresh_product.s(product.id) for product in products])
+
+    result = job.apply_async(expires=120)
+
+    result.join()
