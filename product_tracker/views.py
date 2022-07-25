@@ -1,10 +1,13 @@
-from django.http import HttpResponseRedirect
+from difflib import restore
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
 from .tasks import refresh_all_products_for_user
+from django.views.decorators.csrf import csrf_exempt
+import celery.result
 
 @login_required
 def products_view(request):
@@ -62,11 +65,27 @@ def add_product_view(request):
 #         return HttpResponseRedirect('/products')
 
 @login_required
+@csrf_exempt
 def products_refresh_all(request):
-    if request.method == "GET":
-        refresh_all_products_for_user(request.user)
+    if request.method == "POST":
+        group_result_id = refresh_all_products_for_user(request.user)
 
-        return HttpResponseRedirect('/products')
+        return JsonResponse({'group_result_id': group_result_id})
+
+
+@login_required
+@csrf_exempt
+def get_progress_view(request):
+    if request.method == "GET":
+        group_set_id = request.GET.get('group_result_id')
+        restored_group_result = celery.result.GroupResult.restore(group_set_id)
+        completed_count = restored_group_result.completed_count()
+        total = len(restored_group_result.children)
+
+        if completed_count >= total:
+            restored_group_result.forget()
+
+        return JsonResponse({'total': total, 'completed_count': completed_count})
 
 
 @login_required
