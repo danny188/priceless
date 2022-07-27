@@ -33,7 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const startTime = Date.now();
 
             document.querySelector('#updating-products-label').classList.remove('is-hidden');
-            document.querySelector('#update-time-taken').classList.add('is-hidden');
+            if (document.querySelector('#update-time-taken')) {
+                document.querySelector('#update-time-taken').classList.add('is-hidden');
+            }
+
 
 
             progressBar.classList.remove('is-hidden');
