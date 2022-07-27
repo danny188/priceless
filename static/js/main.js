@@ -77,6 +77,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
         });
+
+
+        // filter form reset
+        document.querySelector('#filter-reset-btn').addEventListener('click', (event) => {
+            const elements = document.querySelectorAll('#product-filter-form input:not(.button), #product-filter-form select');
+
+            elements.forEach(element => {
+                console.log(element.tagName);
+                if (element.tagName === 'SELECT') {
+                    element.querySelectorAll('option')[0].selected = 'selected';
+                } else if (element.getAttribute('type') === 'checkbox') {
+                    element.checked = false;
+                } else {
+                    element.value = "";
+                }
+            });
+        });
+
+        // toggle product filter form
+        let productFilterToggleBtn = document.querySelector('#product-filter-toggle');
+        productFilterToggleBtn.addEventListener('click', (event) => {
+            document.querySelector('#product-filter-form').classList.toggle('is-hidden');
+
+            // change arrow icon
+            if (productFilterToggleBtn.querySelector('i').classList.contains('fa-angle-down')) {
+                productFilterToggleBtn.querySelector('i').classList.remove('fa-angle-down');
+                productFilterToggleBtn.querySelector('i').classList.add('fa-angle-up');
+            } else {
+                productFilterToggleBtn.querySelector('i').classList.add('fa-angle-down');
+                productFilterToggleBtn.querySelector('i').classList.remove('fa-angle-up');
+            }
+        });
+
     }
 
     // display spinner when update-url-button is pressed
@@ -85,4 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.classList.add("is-loading");
         }
     });
+
+
+
   });

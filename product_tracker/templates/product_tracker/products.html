@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load my_tags %}
 
 {% block title %}Tracked Products{% endblock %}
 
@@ -31,7 +33,104 @@
   </div>
 </section>
 
+<section class="section filter">
+
+  <button id="product-filter-toggle" class="button is-info is-outlined">Filter ({{filter.qs|length}}) <i class="fa fa-solid fa-angle-down fa-fw"></i></button>
+
+  <form method="get" id="product-filter-form" class="is-hidden">
+    <div class="columns">
+      <div class="column is-half">
+        <div class="field ">
+          {{ filter.form.name | as_crispy_field}}
+        </div>
+        <div class="field">
+          {{ filter.form.on_sale | as_crispy_field}}
+        </div>
+        <div class="field">
+          {{ filter.form.shop | as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="column">
+        <label for="{{filter.form.current_price__gt.id_for_label}}" class="label">Min Price $</label>
+        <div class="field has-addons">
+          <p class="control">
+            <span class="button is-static">$</span>
+          </p>
+          <div class="control">
+            <input type="number" value="{{ filter.form.current_price__gt.value }}" name="{{ filter.form.current_price__gt.html_name }}" class="input numberinput" id="{{filter.form.current_price__gt.id_for_label}}">
+          </div>
+
+        </div>
+
+        <label for="{{filter.form.current_price__lt.id_for_label}}" class="label">Max Price $</label>
+        <div class="field has-addons">
+          <p class="control">
+            <span class="button is-static">$</span>
+          </p>
+          <div class="control">
+            <input type="number" value="{{ filter.form.current_price__lt.value }}" name="{{ filter.form.current_price__lt.html_name }}" class="input" id="{{filter.form.current_price__lt.id_for_label}}">
+          </div>
+        </div>
+
+      </div>
+      <div class="column">
+        <label for="{{filter.form.savings_percentage__gt.id_for_label}}" class="label">Min Savings %</label>
+        <div class="field has-addons">
+          <div class="control">
+            <input type="number" value="{{ filter.form.savings_percentage__gt.value }}" name="{{ filter.form.savings_percentage__gt.html_name }}" class="input" id="{{filter.form.savings_percentage__gt.id_for_label}}">
+          </div>
+          <p class="control">
+            <span class="button is-static">%</span>
+          </p>
+        </div>
+
+        <label for="{{filter.form.savings_percentage__lt.id_for_label}}" class="label">Max Savings %</label>
+        <div class="field has-addons">
+          <div class="control">
+            <input type="number" value="{{ filter.form.savings_percentage__lt.value }}" name="{{ filter.form.savings_percentage__lt.html_name }}" class="input" id="{{filter.form.savings_percentage__lt.id_for_label}}">
+          </div>
+          <p class="control">
+            <span class="button is-static">%</span>
+          </p>
+        </div>
+
+        <label for="{{filter.form.savings_dollars__gt.id_for_label}}" class="label">Min Savings $</label>
+        <div class="field has-addons">
+          <p class="control">
+            <span class="button is-static">$</span>
+          </p>
+          <div class="control">
+            <input type="number" value="{{ filter.form.savings_dollars__gt.value }}" name="{{ filter.form.savings_dollars__gt.html_name }}" class="input" id="{{filter.form.savings_dollars__gt.id_for_label}}">
+          </div>
+        </div>
+
+        <label for="{{filter.form.savings_dollars__lt.id_for_label}}" class="label">Max Savings $</label>
+        <div class="field has-addons">
+          <p class="control">
+            <span class="button is-static">$</span>
+          </p>
+          <div class="control">
+            <input type="number" value="{{ filter.form.savings_dollars__lt.value }}" name="{{ filter.form.savings_dollars__lt.html_name }}" class="input" id="{{filter.form.savings_dollars__lt.id_for_label}}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <p class="control">
+        <input type="submit" value="Filter" class="button is-info">
+      </p>
+      <p class="control">
+        <input class="button" value="Reset" id="filter-reset-btn">
+      </p>
+
+    </div>
+  </form>
+</section>
+
 <section class="section products">
+  {% comment %} {% for product in page_obj %} {% endcomment %}
   {% for product in page_obj %}
   {% include "product_tracker/single_product.html" %}
   <hr>
@@ -40,8 +139,8 @@
   <div class="pagination center">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a class="button is-light" href="?page=1">&laquo; first</a>
-            <a class="button is-light" href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a class="button is-light" href="?{% param_replace page=1 %}">&laquo; first</a>
+            <a class="button is-light" href="?{% param_replace page=page_obj.previous_page_number %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -49,8 +148,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a class="button is-light" class="outline secondary" href="?page={{ page_obj.next_page_number }}">next</a>
-            <a class="button is-light" class="outline secondary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a class="button is-light" class="outline secondary" href="?{% param_replace page=page_obj.next_page_number %}">next</a>
+            <a class="button is-light" class="outline secondary" href="?{% param_replace page=page_obj.paginator.num_pages %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

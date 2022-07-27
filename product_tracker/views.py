@@ -1,13 +1,18 @@
+from dataclasses import field
 from difflib import restore
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from product_tracker.forms import ProductFilterForm
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
 from .tasks import refresh_all_products_for_user
 from django.views.decorators.csrf import csrf_exempt
 import celery.result
+import django_filters
+from django import forms
+
 
 @login_required
 def products_view(request):
@@ -21,19 +26,25 @@ def products_view(request):
 
     # request.user.products.add(bacon)
 
-    products = sorted(request.user.product_set.all().order_by('name'), key = lambda p: -p.savings_dollars())
+    products = sorted(request.user.product_set.all().order_by('name'), key = lambda p: -p.calculate_savings_dollars())
     on_sale_products = request.user.product_set.filter(on_sale=True)
 
     # charcoal = products.get(pk=10)
     # charcoal.image_url = 'https://cdn0.woolworths.media/content/wowproductimages/small/176564.jpg'
     # charcoal.save()
 
-    paginator = Paginator(products, 10)
+    filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
+
+    paginator = Paginator(filter.qs, 4)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'products': products, 'page_obj': page_obj, 'on_sale_products': on_sale_products}
+
+    context = {'products': products,
+               'page_obj': page_obj,
+               'on_sale_products': on_sale_products,
+               'filter': filter}
 
     return render(request, "product_tracker/products.html", context=context)
 
@@ -113,3 +124,39 @@ def update_product_url_view(request):
             context = {'product': product}
 
             return render(request, 'product_tracker/single_product.html', context=context)
+
+
+
+def filter_on_sale(queryset, name, value):
+    if value == 'both':
+        return queryset
+    elif value == 'on_sale':
+        return queryset.filter(on_sale=True)
+    else:
+        return queryset.filter(on_sale=False)
+
+
+class ProductFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    current_price__gt = django_filters.NumberFilter(field_name='current_price', lookup_expr='gt')
+    current_price__lt = django_filters.NumberFilter(field_name='current_price', lookup_expr='lt')
+    savings_percentage__gt = django_filters.NumberFilter(field_name='savings_percentage', lookup_expr='gt')
+    savings_percentage__lt = django_filters.NumberFilter(field_name='savings_percentage', lookup_expr='lt')
+    savings_dollars__gt = django_filters.NumberFilter(field_name='savings_dollars', lookup_expr='gt')
+    savings_dollars__lt = django_filters.NumberFilter(field_name='savings_dollars', lookup_expr='lt')
+    # on_sale = django_filters.BooleanFilter(widget=forms.CheckboxInput)
+
+    SHOP_CHOICES = (('Woolworths', 'Woolworths'), )
+
+    shop = django_filters.MultipleChoiceFilter(choices=SHOP_CHOICES, field_name='shop', widget=forms.CheckboxSelectMultiple)
+
+    ON_SALE_CHOICES = (('both', 'On-sale or standard-price'),
+                       ('on_sale', 'On Sale'),
+                       ('standard_price', 'Standard Price'),)
+    on_sale = django_filters.ChoiceFilter(choices=ON_SALE_CHOICES, method=filter_on_sale)
+
+
+    class Meta:
+        model = Product
+        fields = ['name']
+

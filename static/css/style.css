@@ -29,3 +29,10 @@ nav {
 hr {
     margin: 40px auto 20px;
 }
+
+section.filter form {
+    background-color: #E0E0E0;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 25px;
+}

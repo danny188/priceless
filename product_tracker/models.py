@@ -16,7 +16,12 @@ class Product(models.Model):
     current_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     was_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     product_type_by_shop = models.CharField(max_length=200)
-    shop = models.CharField(max_length=200)
+
+    SHOP_CHOICES = (('Woolworths', 'Woolworths'),)
+
+    shop = models.CharField(max_length=200, choices=SHOP_CHOICES)
+    savings_percentage = models.IntegerField(blank=True, null=True)
+    savings_dollars = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,15 +33,17 @@ class Product(models.Model):
                     self.__class__ = _class
                     break
 
-    def savings_dollars(self):
+    def calculate_savings_dollars(self):
         if self.was_price and self.current_price:
             return round(abs(self.was_price - self.current_price), 2)
         else:
             return 0
 
-    def savings_percentage(self):
+    def calculate_savings_percentage(self):
         if self.was_price and self.current_price:
-            return round(self.savings_dollars() / self.was_price * 100)
+            return round(self.calculate_savings_dollars() / self.was_price * 100)
+        else:
+            return 0
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -90,6 +97,8 @@ class WoolworthsProduct(Product):
         self.was_price = json['Product']['WasPrice']
         self.image_url = json['Product']['SmallImageFile']
         self.last_price_check = datetime.now()
+        self.savings_dollars = self.calculate_savings_dollars()
+        self.savings_percentage = self.calculate_savings_percentage()
 
         if self.current_price != self.was_price and self.was_price:
             self.on_sale = True

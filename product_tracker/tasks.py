@@ -4,17 +4,10 @@ from django.http import HttpResponse, JsonResponse
 from product_tracker.models import Product
 
 @shared_task
-def adding_task(x, y):
-    print('doing adding task')
-    return x + y
-
-
-@shared_task
 def refresh_product(id):
     product = Product.objects.get(pk=id)
     product.fetch_price()
     product.save()
-    print('finished updating product ' + str(product.id))
 
 
 @shared_task

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bulma',
     'django_celery_beat',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -168,3 +169,5 @@ CELERY_BEAT_SCHEDULE = {
         },
     },
 }
+
+FILTERS_EMPTY_CHOICE_LABEL = None
