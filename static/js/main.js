@@ -1,3 +1,18 @@
+function getCookie(c_name) {
+    if (document.cookie.length > 0)
+    {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1)
+        {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // add listener to delete notifications
     (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
@@ -45,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // request to start background tasks to update user's products, and get the async group result id
-            fetch('/products/refreshallforuser', {method: "POST"})
+            fetch('/products/refreshallforuser', {method: "POST", headers: {"X-CSRFToken": getCookie("csrftoken")}})
                 .then((response) => response.json())
                 .then((data) => data['group_result_id'])
                 .then((groupResultId) => {

@@ -65,7 +65,6 @@ def add_product_view(request):
 #         return HttpResponseRedirect('/products')
 
 @login_required
-@csrf_exempt
 def products_refresh_all(request):
     if request.method == "POST":
         group_result_id = refresh_all_products_for_user(request.user)
@@ -74,7 +73,6 @@ def products_refresh_all(request):
 
 
 @login_required
-@csrf_exempt
 def get_progress_view(request):
     if request.method == "GET":
         group_set_id = request.GET.get('group_result_id')
