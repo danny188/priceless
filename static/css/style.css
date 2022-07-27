@@ -36,3 +36,13 @@ section.filter form {
     padding: 20px;
     margin-top: 25px;
 }
+
+#filter-submit-btn {
+    flex: 1 1 1px;
+    width: 200px;
+}
+
+#filter-reset-btn {
+    flex: 1 1 0px;
+    width: 100px;
+}
