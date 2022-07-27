@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const startTime = Date.now();
 
             document.querySelector('#updating-products-label').classList.remove('is-hidden');
+            document.querySelector('#update-time-taken').classList.add('is-hidden');
+
 
             progressBar.classList.remove('is-hidden');
 
@@ -49,10 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         console.log(completed_count + '/' + total + ' completed');
                     });
+
                 if (total === completed_count) {
-                    const duration = Date.now() - startTime;
-                    window.location.reload();
-                    alert("took " + (duration / 1000).toFixed(2)  + " seconds");
+                    const durationMilliseconds = Date.now() - startTime;
+                    const durationSeconds = (durationMilliseconds / 1000).toFixed(2);
+
+                    window.location.href = '/products?refreshtime=' + durationSeconds;
                 }
                 setTimeout(updateProgress, 500, progressUrl);
 

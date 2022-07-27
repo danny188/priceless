@@ -23,6 +23,9 @@
         <a href="/products/refreshallforuser" id="refresh-all-products" class="button is-light is-info">Refresh Price For All Products</a>
         <p id="updating-products-label" class="is-hidden"><strong>Updating products: <span id="completed_count"></span>/<span id="num-of-products"></span> done</strong></p>
         <progress id="updating-products-progress-bar" class="progress is-small is-primary is-hidden" max="100" value="0"></progress>
+        {% if request.GET.refreshtime %}
+        <p id="update-time-taken">Updates finished in {{ request.GET.refreshtime }} seconds</p>
+        {% endif %}
       </div>
     </div>
   </div>
