@@ -17,6 +17,7 @@ class ProductTable(tables.Table):
     """)
 
     price = tables.TemplateColumn("${{ record.current_price }}")
+    was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
     savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
     savings_dollars = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Savings $")
 
@@ -52,8 +53,8 @@ class ProductTable(tables.Table):
         model = Product
         orderable = False
 
-        fields = ('name', 'sale_status', 'price', 'savings_percentage', 'savings_dollars', 'shop', 'last_price_check')
-        sequence = ('image', 'name', 'shop', 'sale_status', 'price', 'savings_percentage', 'savings_dollars', 'last_price_check')
+        fields = ('name', 'sale_status', 'price', 'was_price', 'savings_percentage', 'savings_dollars', 'shop', 'last_price_check')
+        sequence = ('image', 'name', 'shop', 'sale_status', 'price', 'was_price', 'savings_percentage', 'savings_dollars', 'last_price_check')
 
         attrs = {"class": "", "id": "products-table"}
         row_attrs = {
