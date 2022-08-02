@@ -49,3 +49,7 @@ section.filter form {
     flex: 1 1 0px;
     width: 100px;
 }
+
+#products-table {
+    width: 98% !important;
+}

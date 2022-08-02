@@ -1,3 +1,17 @@
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1)
+        {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Functions to open and close a modal
     function openModal($el) {
@@ -14,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Add a click event on buttons to open a specific modal
-
+    // Add a click event on buttons for displaying modal to update product url
     document.querySelector('.section.products-table').addEventListener('click', (e) => {
         $trigger = e.target;
 
@@ -36,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
     document.querySelector('#modal-js-update-product-url #update-url-button').addEventListener('click', (event) => {
         // ajax request to get new row data
         let productId = event.target.dataset.productId;
@@ -52,8 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
         });
 
-
-
         const modal = event.target.closest('.modal');
         closeModal(modal);
     });
@@ -62,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
 
     // });
+
 
     // Add a click event on various child elements to close the parent modal
     (document.querySelectorAll('.modal-background, .modal-close, .modal-close2, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {

@@ -1,20 +1,5 @@
 let productsTable;
 
-function getCookie(c_name) {
-    if (document.cookie.length > 0)
-    {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1)
-        {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) c_end = document.cookie.length;
-            return unescape(document.cookie.substring(c_start,c_end));
-        }
-    }
-    return "";
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     // display loading bar when refresh all products button clicked
     if (document.querySelector('#refresh-all-products')) {
@@ -105,35 +90,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    // display spinner when update-url-button is pressed
+    // todo: display spinner when update-url-button is pressed
     document.querySelector('.section.products').addEventListener('click', (e) => {
         if (e.target.classList.contains("update-url-button")) {
             e.target.classList.add("is-loading");
         }
     });
-
-
-
 });
-
 
 
 $(window).on ('load', function() {
     productsTable = $('#products-table').DataTable({
-        "retrieve": false,
-        "scrollX": false,
-        // "autoWidth": false,
-        // "columns": [
-        //     null,
-        //     { "width": "20%" },
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        //   ]
+        scrollX: false,
+        responsive: true,
     });
 });
 
