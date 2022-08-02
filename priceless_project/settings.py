@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_bulma',
     'django_celery_beat',
     'django_filters',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [

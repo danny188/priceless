@@ -1,16 +1,19 @@
 from dataclasses import field
 from difflib import restore
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
+
+from product_tracker.tables import ProductTable
 from .tasks import refresh_all_products_for_user
 from django.views.decorators.csrf import csrf_exempt
 import celery.result
 import django_filters
 from django import forms
+from django_tables2 import SingleTableView
 
 
 @login_required
@@ -39,11 +42,13 @@ def products_view(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    table = ProductTable(filter.qs)
 
     context = {'products': products,
                'page_obj': page_obj,
                'on_sale_products': on_sale_products,
-               'filter': filter}
+               'filter': filter,
+               'product_table': table}
 
     return render(request, "product_tracker/products.html", context=context)
 
@@ -105,7 +110,7 @@ def delete_product_view(request):
         if product:
             product.delete()
 
-        return HttpResponseRedirect('/products')
+        return HttpResponse('')
 
 @login_required
 def update_product_url_view(request):
@@ -159,3 +164,8 @@ class ProductFilter(django_filters.FilterSet):
         model = Product
         fields = ['name']
 
+
+class ProductListView(SingleTableView):
+    model = Product
+    table_class = ProductTable
+    template_name = "product_tracker/products.html"

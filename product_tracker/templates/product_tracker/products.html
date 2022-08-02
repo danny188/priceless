@@ -129,8 +129,13 @@
   </form>
 </section>
 
+{% load render_table from django_tables2 %}
+<section class="section products-table">
+  {% render_table product_table %}
+</section>
+
+{% comment %}
 <section class="section products">
-  {% comment %} {% for product in page_obj %} {% endcomment %}
   {% for product in page_obj %}
   {% include "product_tracker/single_product.html" %}
   <hr>
@@ -153,7 +158,7 @@
         {% endif %}
     </span>
 </div>
-</section>
+</section> {% endcomment %}
 
 
 

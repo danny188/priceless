@@ -121,4 +121,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  });
+});
+
+
+
+$(window).on ('load', function() {
+    $('#products-table').DataTable({
+        "scrollX": false,
+        // "autoWidth": false,
+        // "columns": [
+        //     null,
+        //     { "width": "20%" },
+        //     null,
+        //     null,
+        //     null,
+        //     null,
+        //     null,
+        //     null,
+        //     null
+        //   ]
+    });
+});
+

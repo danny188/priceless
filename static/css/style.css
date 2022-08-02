@@ -4,6 +4,9 @@ nav {
 
 .product-thumbnail {
     margin: 3px;
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    padding: 2px;
 }
 
 .on-sale {
