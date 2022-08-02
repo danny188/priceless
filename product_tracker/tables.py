@@ -31,17 +31,15 @@ class ProductTable(tables.Table):
     actions = tables.TemplateColumn("""
     <div class="columns">
         <div class="column">
-            <form action="/product/delete" method="POST" onsubmit="return confirm('Are you sure you want to remove this product?');">
-                {% csrf_token %}
-                <button type="submit" name="update-url" value="update-url" class="button is-info is-light">Update URL</button>
-                <input type="hidden" name="product_id" value={{record.id}}>
-            </form>
+            <button class="button show-update-url-modal is-small is-info is-light js-modal-trigger" data-target="modal-js-update-product-url" data-product-id="{{record.id}}" data-product-url="{{record.url}}">
+                Update URL
+            </button>
         </div>
 
         <div class="column">
             <form action="/product/delete" method="POST"">
                 {% csrf_token %}
-                <button hx-post="/product/delete" hx-target="#row-for-product-{{record.id}}" hx-swap="outerHTML" hx-confirm="Are you sure you want to remove this product?" name="remove" value="Remove" class="button is-danger is-light">Remove</button>
+                <button hx-post="/product/delete" hx-target="#row-for-product-{{record.id}}" hx-swap="outerHTML" hx-confirm="Are you sure you want to remove this product?" name="remove" value="Remove" class="button is-danger is-small is-light">Remove</button>
                 <input type="hidden" name="product_id" value={{record.id}}>
             </form>
         </div>

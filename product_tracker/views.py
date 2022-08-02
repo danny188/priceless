@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import celery.result
 import django_filters
 from django import forms
-from django_tables2 import SingleTableView
+from bs4 import BeautifulSoup
 
 
 @login_required
@@ -37,15 +37,15 @@ def products_view(request):
 
     filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
 
-    paginator = Paginator(filter.qs, 4)
+    # paginator = Paginator(filter.qs, 4)
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
 
     table = ProductTable(filter.qs)
-
+    # print(table.as_html(request))
     context = {'products': products,
-               'page_obj': page_obj,
+            #    'page_obj': page_obj,
                'on_sale_products': on_sale_products,
                'filter': filter,
                'product_table': table}
@@ -127,7 +127,32 @@ def update_product_url_view(request):
             product.save()
             context = {'product': product}
 
-            return render(request, 'product_tracker/single_product.html', context=context)
+            # generate table
+            filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
+            table = ProductTable(filter.qs)
+
+            num_products_on_sale = filter.qs.filter(on_sale=True).count()
+
+            # get html of table
+            table_html = table.as_html(request)
+
+            # use bs to get html of row for product
+            soup = BeautifulSoup(table_html, 'html.parser')
+            product_row_html = soup.select_one('#row-for-product-' + str(product.id))
+
+            row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
+
+            row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
+
+
+            return JsonResponse({
+                'row_data': list(row_tds_inner_html),
+                'num_products_on_sale': num_products_on_sale,})
+            # return html
+            # return HttpResponse(product_row_html)
+
+            # return render(request, 'product_tracker/single_product.html', context=context)
+            # return HttpResponseRedirect('/products')
 
 
 
@@ -164,8 +189,3 @@ class ProductFilter(django_filters.FilterSet):
         model = Product
         fields = ['name']
 
-
-class ProductListView(SingleTableView):
-    model = Product
-    table_class = ProductTable
-    template_name = "product_tracker/products.html"

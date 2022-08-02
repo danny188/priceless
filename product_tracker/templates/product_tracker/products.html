@@ -17,7 +17,7 @@
     </div>
     <div class="level-item">
       <p class="subtitle is-5">
-        <strong>{{ on_sale_products | length }}</strong> on sale right now
+        <strong><span id="num-products-on-sale">{{ on_sale_products | length }}</span></strong> on sale right now
       </p>
     </div>
     <div class="level-item">
@@ -132,6 +132,37 @@
 {% load render_table from django_tables2 %}
 <section class="section products-table">
   {% render_table product_table %}
+
+  <div id="modal-js-update-product-url" class="modal">
+    <div class="modal-background"></div>
+
+    <div class="modal-content">
+      <div class="box">
+        <h3 class="title is-3">Update URL of product</h3>
+        <form id="update-product-url" action="/product/update-url" method="POST">
+          {% csrf_token %}
+          <div class="columns">
+            <div class="field column">
+              <input type="text" class="input control" placeholder="url of the product" name="updated_url" id="updated_url">
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="field column">
+              <button type="button" id="update-url-button" class="button is-medium is-info is-light update-url-button is-fullwidth">Update URL</button>
+            </div>
+            <div class="field column">
+              <button type="button" class="is-fullwidth button is-medium is-light modal-close2">Close</button>
+            </div>
+          </div>
+
+          <input type="hidden" name="product_id" id="product_id">
+        </form>
+      </div>
+    </div>
+
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
 </section>
 
 {% comment %}

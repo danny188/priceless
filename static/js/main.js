@@ -1,3 +1,5 @@
+let productsTable;
+
 function getCookie(c_name) {
     if (document.cookie.length > 0)
     {
@@ -14,15 +16,6 @@ function getCookie(c_name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // add listener to delete notifications
-    (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-      const $notification = $delete.parentNode;
-
-      $delete.addEventListener('click', () => {
-        $notification.parentNode.removeChild($notification);
-      });
-    });
-
     // display loading bar when refresh all products button clicked
     if (document.querySelector('#refresh-all-products')) {
         document.querySelector('#refresh-all-products').addEventListener('click', (event) => {
@@ -126,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 $(window).on ('load', function() {
-    $('#products-table').DataTable({
+    productsTable = $('#products-table').DataTable({
+        "retrieve": false,
         "scrollX": false,
         // "autoWidth": false,
         // "columns": [
