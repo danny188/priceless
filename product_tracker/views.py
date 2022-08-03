@@ -110,7 +110,15 @@ def delete_product_view(request):
         if product:
             product.delete()
 
-        return HttpResponse('')
+            return JsonResponse({
+                'result': 'success'
+            })
+
+        return JsonResponse({
+            'result': 'error',
+            'msg': 'product not found'
+        })
+
 
 @login_required
 def update_product_url_view(request):

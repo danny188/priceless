@@ -1,3 +1,5 @@
+"use strict";
+
 let productsTable;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = '/products?refreshtime=' + durationSeconds;
                 }
                 setTimeout(updateProgress, 500, progressUrl);
-
             }
 
 
@@ -90,12 +91,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    // todo: display spinner when update-url-button is pressed
-    document.querySelector('.section.products').addEventListener('click', (e) => {
-        if (e.target.classList.contains("update-url-button")) {
-            e.target.classList.add("is-loading");
+    // Add a click event handlers on action buttons
+    document.querySelector('.section.products-table').addEventListener('click', (e) => {
+        let $trigger = e.target;
+
+        if ($trigger.classList.contains('show-update-url-modal')) {
+            const modal = $trigger.dataset.target;
+            const $target = document.getElementById(modal);
+            let productId = $trigger.dataset.productId;
+
+            openModal($target);
+
+            // for product-url-update modal, fill modal form with data from trigger button
+            $target.querySelector('#updated_url').value = $trigger.dataset.productUrl;
+            $target.querySelector('#updated_url').select();
+            $target.querySelector('#product_id').value = $trigger.dataset.productId;
+
+            document.querySelector('#modal-js-update-product-url #update-url-button').dataset.productId = productId;
+        } else if ($trigger.classList.contains('remove-product-button')) {
+            if (confirm("Are you sure you want to remove this product?")) {
+                let productId = $trigger.dataset.productId;
+
+                let deleteProductForm = document.querySelector('#form-delete-product-' + productId);
+                // send ajax request
+                fetch('/product/delete', {
+                    method: 'post',
+                    body: new FormData(deleteProductForm),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(JSON.stringify(data));
+                    if (data['result'] === 'success') {
+                        // remove product row
+                        productsTable.row('#row-for-product-' + productId).remove();
+                        productsTable.draw();
+
+                        // display feedback
+                        showTimedNotification("Product successfully deleted", 5000, ['is-success']);
+                    }
+                });
+            }
         }
     });
+
+
+    // event handler for updating product url
+    document.querySelector('#modal-js-update-product-url #update-url-button').addEventListener('click', (event) => {
+        // ajax request to get new row data
+        let productId = event.target.dataset.productId;
+        fetch('/product/update-url', {
+            method: 'post',
+            body: new FormData(document.querySelector('#update-product-url')),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let rowData = data['row_data'];
+            productsTable.row('#row-for-product-' + productId).data(rowData);
+
+            // update number of products on sale
+            document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
+        });
+
+        const modal = event.target.closest('.modal');
+        closeModal(modal);
+    });
+
+
+    // todo: display spinner when update-url-button is pressed
+    // document.querySelector('.section.products').addEventListener('click', (e) => {
+    //     if (e.target.classList.contains("update-url-button")) {
+    //         e.target.classList.add("is-loading");
+    //     }
+    // });
+
 });
 
 

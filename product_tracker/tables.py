@@ -38,9 +38,9 @@ class ProductTable(tables.Table):
         </div>
 
         <div class="column">
-            <form action="/product/delete" method="POST"">
+            <form id="form-delete-product-{{record.id}}" action="/product/delete" method="POST"">
                 {% csrf_token %}
-                <button hx-post="/product/delete" hx-target="#row-for-product-{{record.id}}" hx-swap="outerHTML" hx-confirm="Are you sure you want to remove this product?" name="remove" value="Remove" class="button is-danger is-small is-light">Remove</button>
+                <button type="button" name="remove" value="Remove" class="button is-danger is-small is-light remove-product-button" data-product-id="{{record.id}}">Remove</button>
                 <input type="hidden" name="product_id" value={{record.id}}>
             </form>
         </div>

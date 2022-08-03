@@ -53,3 +53,40 @@ section.filter form {
 #products-table {
     width: 98% !important;
 }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.short-lived-notification {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 100;
+}
+
+.fade-in-notification {
+    animation: fadeIn 2s;
+    -webkit-animation: fadeIn 2s;
+    -moz-animation: fadeIn 2s;
+    -o-animation: fadeIn 2s;
+    -ms-animation: fadeIn 2s;
+    animation-fill-mode: forwards;
+}
+
+.fade-out-notification {
+    animation: fadeOut 2s;
+    -webkit-animation: fadeOut 2s;
+    -moz-animation: fadeOut 2s;
+    -o-animation: fadeOut 2s;
+    -ms-animation: fadeOut 2s;
+    animation-fill-mode: forwards;
+}
+
+

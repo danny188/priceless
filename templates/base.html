@@ -14,14 +14,20 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/r-2.3.0/datatables.min.css"/>
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/r-2.3.0/datatables.min.js"></script>
-    <script src="/static/js/product_tracker.js"></script>
     <script src="/static/js/common.js"></script>
+
+
 
 
 
     <title>Priceless - {% block title %}Get Notified When Your Beloved Products Go On Sale{% endblock title %}</title>
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <div class="notification short-lived-notification is-hidden">
+      <button class="delete"></button>
+      <p id="notification-text"></p>
+    </div>
 
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
