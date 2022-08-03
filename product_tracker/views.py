@@ -105,13 +105,19 @@ def get_progress_view(request):
 def delete_product_view(request):
     if request.method == "POST":
         product_id = request.POST.get("product_id")
-        product = request.user.product_set.get(pk=product_id)
+        qs = request.user.product_set
+        product = qs.get(pk=product_id)
+
 
         if product:
             product.delete()
+            num_products = qs.count()
+            num_products_on_sale = qs.filter(on_sale=True).count()
 
             return JsonResponse({
-                'result': 'success'
+                'result': 'success',
+                'num_products': num_products,
+                'num_products_on_sale': num_products_on_sale,
             })
 
         return JsonResponse({

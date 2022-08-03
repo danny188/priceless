@@ -120,14 +120,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(JSON.stringify(data));
                     if (data['result'] === 'success') {
                         // remove product row
                         productsTable.row('#row-for-product-' + productId).remove();
                         productsTable.draw();
 
+                        // update num of products, num of products on sale
+                        document.querySelector('#num-products').textContent = data['num_products'];
+                        document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
+
                         // display feedback
                         showTimedNotification("Product successfully deleted", 5000, ['is-success']);
+                    } else if (data['result'] === 'error') {
+                        // display feedback
+                        showTimedNotification("Error: " + data['msg'], 5000, ['is-danger']);
                     }
                 });
             }
