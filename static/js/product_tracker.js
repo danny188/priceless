@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/product/delete', {
                     method: 'post',
                     body: new FormData(deleteProductForm),
+                    headers: {"X-CSRFToken": getCookie("csrftoken")},
                 })
                 .then((response) => response.json())
                 .then((data) => {
