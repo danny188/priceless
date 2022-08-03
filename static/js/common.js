@@ -104,4 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // });
 
+    if (document.querySelector('#form-add-product #input-new-url')) {
+        document.querySelector('#form-add-product #input-new-url').focus();
+    }
+
 });
