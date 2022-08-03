@@ -127,7 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         productsTable.draw();
 
                         // update num of products, num of products on sale
-                        document.querySelector('#num-products').textContent = data['num_products'];
+                        document.querySelectorAll('.num-products').forEach((element) => {
+                            element.textContent = data['num_products'];
+                        });
+
                         document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
 
                         // display feedback

@@ -14,7 +14,7 @@
   <div class="level">
     <div class="level-item">
       <p class="subtitle is-5">
-        <strong><span id="num-products">{{ products | length }}</span></strong> total products
+        <strong><span class="num-products">{{ products | length }}</span></strong> total products
       </p>
     </div>
     <div class="level-item">
@@ -37,7 +37,7 @@
 
 <section class="section filter">
 
-  <button id="product-filter-toggle" class="button is-info is-outlined">Filter ({{filter.qs|length}}) <i class="fa fa-solid fa-angle-down fa-fw"></i></button>
+  <button id="product-filter-toggle" class="button is-info is-outlined">Filter (<span class="num-products">{{filter.qs|length}}</span>) <i class="fa fa-solid fa-angle-down fa-fw"></i></button>
 
   <form method="get" id="product-filter-form" class="is-hidden">
     <div class="columns">
