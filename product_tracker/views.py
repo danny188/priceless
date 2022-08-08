@@ -1,3 +1,4 @@
+import os
 from dataclasses import field
 from difflib import restore
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -8,7 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 
 from product_tracker.tables import ProductTable
-from .tasks import refresh_all_products_for_user
+from .tasks import refresh_all_products, refresh_all_products_for_user
 from django.views.decorators.csrf import csrf_exempt
 import celery.result
 import django_filters
@@ -202,4 +203,14 @@ class ProductFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ['name']
+
+
+@csrf_exempt
+def job_update_all_products_view(request):
+    app_password = request.META.get('HTTP_APP_PASSWORD')
+
+    if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        group_result_id = refresh_all_products()
+
+        return JsonResponse({'group_result_id': group_result_id})
 
