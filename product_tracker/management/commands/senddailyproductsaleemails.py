@@ -5,10 +5,10 @@ import os
 from django.urls import reverse
 
 class Command(BaseCommand):
-    help = 'Triggers the update of all product prices'
+    help = 'Triggers the sending of emails notifying of new product sales'
 
     def handle(self, *args, **options):
-        url = os.environ.get('BASE_URL', 'http://localhost:8000') + reverse('job-update-all-products')
+        url = os.environ.get('BASE_URL', 'http://localhost:8000') + reverse('job-send-daily-product-sale-emails')
         data = {}
         headers = {'App-Password': os.environ.get("APP_PASSWORD", 'secret')}
 

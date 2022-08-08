@@ -15,9 +15,13 @@
     <p>Hi,</p>
     {% endif %}
 
+    {% if num_products_on_sale > 0 %}
     <p>{{ intro }}</p>
 
     {% render_table products_table %}
+    {% else %}
+    <p>None of your products are on sale at the moment.</p>
+    {% endif %}
 
 </body>
 </html>

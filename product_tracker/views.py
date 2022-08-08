@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 
 from product_tracker.tables import ProductTable
-from .tasks import refresh_all_products, refresh_all_products_for_user, send_product_sale_summary_emails
+from .tasks import refresh_all_products, refresh_all_products_for_user, send_product_sale_summary_emails, send_daily_product_sale_emails
 from django.views.decorators.csrf import csrf_exempt
 import celery.result
 import django_filters
@@ -223,6 +223,15 @@ def job_send_product_sale_summary_emails_view(request):
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
         group_result_id = send_product_sale_summary_emails()
+
+        return JsonResponse({'group_result_id': group_result_id})
+
+@csrf_exempt
+def job_send_daily_product_sale_emails_view(request):
+    app_password = request.META.get('HTTP_APP_PASSWORD')
+
+    if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        group_result_id = send_daily_product_sale_emails()
 
         return JsonResponse({'group_result_id': group_result_id})
 

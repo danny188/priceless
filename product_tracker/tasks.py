@@ -61,40 +61,47 @@ def refresh_all_products_for_user(user):
 
 
 @shared_task
-def send_product_sale_summary_email_for_user(userId):
+def send_product_sale_summary_email_for_user(userId, notify_new_sales_only=False):
     '''Sends a notification email to a user containing a list of products on sale'''
 
-    # get list of products on sale
     user = User.objects.get(pk=userId)
-    products_on_sale = user.product_set.filter(on_sale=True)
+
+    if notify_new_sales_only:
+        intro = 'Here are the products that newly went on sale:'
+        products_on_sale = user.product_set.filter(on_sale=True).filter(sale_notified_to_user=False)
+    else:
+        intro = 'Here are your products that are currently on sale:'
+        products_on_sale = user.product_set.filter(on_sale=True)
+
 
     table = ProductTableForEmail(products_on_sale)
+    num_products_on_sale = products_on_sale.count()
 
     context = {'products_table': table,
-               'intro': "Here are your products that are currently on sale:",
-               'name': user.first_name}
+               'intro': intro,
+               'name': user.first_name,
+               'num_products_on_sale': num_products_on_sale}
 
     html_message = render_to_string('product_tracker/product_sale_email_template.html', context)
 
     def generatePlainTextMessage():
+        msg = f"Hi {user.first_name},\n\n" if user.first_name else ""
 
-        if user.first_name:
-            msg = f"Hi {user.first_name},\n\n"
-        else:
-            msg = ""
-
-        msg = msg + "Here are your products that are currently on sale:\n\n"
+        msg = msg + intro + "\n\n"
 
         for product in products_on_sale:
             msg = msg + f"{product.name} ({product.shop}) - Current price: ${product.current_price}, Savings: {product.savings_percentage}%\n"
+
+            # indicate sale has been notified to the user
+            product.sale_notified_to_user = True
+            product.save()
 
         return msg
 
     plain_message = generatePlainTextMessage()
 
-    print(plain_message)
-
-    mail.send_mail("Priceless Updates", plain_message, from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=html_message)
+    if not notify_new_sales_only or num_products_on_sale > 0:
+        mail.send_mail("Priceless Updates", plain_message, from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=html_message)
 
 
 @shared_task
@@ -104,6 +111,20 @@ def send_product_sale_summary_emails():
     users = User.objects.all()
 
     job = group([send_product_sale_summary_email_for_user.s(user.id) for user in users])
+
+    result = job.apply_async(expires=120)
+    result.save()
+
+    return result.id
+
+@shared_task
+def send_daily_product_sale_emails():
+    '''Sends notification emails to all users containing a list of products on sale
+        that weren't previously notified to the user'''
+
+    users = User.objects.all()
+
+    job = group([send_product_sale_summary_email_for_user.s(user.id, True) for user in users])
 
     result = job.apply_async(expires=120)
     result.save()
