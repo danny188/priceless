@@ -9,7 +9,11 @@
 </head>
 
 <body>
+    {% if name %}
     <p>Hi {{ name }},</p>
+    {% else %}
+    <p>Hi,</p>
+    {% endif %}
 
     <p>{{ intro }}</p>
 

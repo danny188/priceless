@@ -1,3 +1,4 @@
+from pydoc import plain
 from celery import shared_task, group
 from django.http import HttpResponse, JsonResponse
 
@@ -60,9 +61,10 @@ def refresh_all_products_for_user(user):
 
 
 @shared_task
-def send_product_sale_summary_email_for_user(user):
+def send_product_sale_summary_email_for_user(userId):
     '''Sends a notification email to a user containing a list of products on sale'''
     # get list of products on sale
+    user = User.objects.get(pk=userId)
     products_on_sale = user.product_set.filter(on_sale=True)
 
     table = ProductTableForEmail(products_on_sale)
@@ -73,7 +75,9 @@ def send_product_sale_summary_email_for_user(user):
 
     html_message = render_to_string('product_tracker/product_sale_email_template.html', context)
     plain_message=strip_tags(html_message)
-    mail.send_mail("Priceless Updates",plain_message, from_email="thepricelessapp@gmail.com", recipient_list=['dyhh12@gmail.com'], html_message=html_message)
+    #todo create separate plain text version of message
+
+    mail.send_mail("Priceless Updates",plain_message, from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=html_message)
 
 
 @shared_task
@@ -82,7 +86,7 @@ def send_product_sale_summary_emails():
 
     users = User.objects.all()
 
-    job = group([send_product_sale_summary_email_for_user.s(user) for user in users])
+    job = group([send_product_sale_summary_email_for_user.s(user.id) for user in users])
 
     result = job.apply_async(expires=120)
     result.save()
