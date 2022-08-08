@@ -68,6 +68,7 @@ class WoolworthsProduct(Product):
 
     @classmethod
     def fetch_data(cls, url):
+        print("inside fetch_data")
         response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS)
         json = response.json()
         print('data coming back from Woolies?')
