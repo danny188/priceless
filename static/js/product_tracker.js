@@ -174,13 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
     //     }
     // });
 
-});
-
-
-$(window).on ('load', function() {
     productsTable = $('#products-table').DataTable({
         scrollX: false,
         responsive: true,
+        autoWidth: false,
     });
-});
 
+});
