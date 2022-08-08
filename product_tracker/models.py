@@ -9,6 +9,7 @@ import re
 
 class Product(models.Model):
     on_sale = models.BooleanField(default=False)
+    sale_notified_to_user = models.BooleanField(default=False)
     url = models.URLField(max_length=2000)
     image_url = models.URLField(max_length=2000, null=True)
     name = models.CharField(max_length=200)
