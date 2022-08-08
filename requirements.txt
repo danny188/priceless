@@ -13,6 +13,7 @@ click-repl==0.2.0
 colorama==0.4.5
 crispy-bulma==0.8.0
 Deprecated==1.2.13
+dj-database-url==1.0.0
 Django==4.0.6
 django-celery-beat==2.3.0
 django-crispy-forms==1.14.0
@@ -42,4 +43,5 @@ tzdata==2022.1
 urllib3==1.26.10
 vine==5.0.0
 wcwidth==0.2.5
+whitenoise==6.2.0
 wrapt==1.14.1

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 
 import environ
+import dj_database_url
+import os
 
 env = environ.Env(DEBUG=(bool, False))
 # reading .env file
@@ -87,15 +89,18 @@ WSGI_APPLICATION = 'priceless_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DATABASE_NAME"),
-        'USER': env("DATABASE_USER"),
-        'PASSWORD': env("DATABASE_PASSWORD"),
-        'HOST': env("DATABASE_HOST"),
-        'PORT': env("DATABASE_PORT"),
-    }
+     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': env("DATABASE_NAME"),
+    #     'USER': env("DATABASE_USER"),
+    #     'PASSWORD': env("DATABASE_PASSWORD"),
+    #     'HOST': env("DATABASE_HOST"),
+    #     'PORT': env("DATABASE_PORT"),
+    # }
 }
 
 
@@ -137,6 +142,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
