@@ -61,3 +61,31 @@ class ProductTable(tables.Table):
             "data-product-id": lambda record: record.pk,
             "id": lambda record: "row-for-product-" + str(record.pk),
         }
+
+
+class ProductTableForEmail(tables.Table):
+    image = tables.TemplateColumn("""
+    {% if record.image_url %}
+    <a href="{{record.url}}">
+    <img src={{ record.image_url }}>
+    </a>
+    {% endif %}
+    """, verbose_name='')
+
+    price = tables.TemplateColumn("${{ record.current_price }}")
+    was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
+    savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
+
+    name = tables.TemplateColumn("""
+        <a href="{{record.url}}"><strong>{{ record.name }}</strong></a>
+    """, verbose_name="Product")
+
+    class Meta:
+        model = Product
+        orderable = False
+
+        fields = ('name', 'price', 'was_price', 'savings_percentage', 'shop', 'last_price_check')
+        sequence = ('image', 'name', 'shop', 'price', 'was_price', 'savings_percentage', 'last_price_check')
+
+        attrs = {"border": "1", "style": "border-color: grey; border-collapse:collapse; padding: 5px;",
+                  'td': {'style': 'padding: 5px;'}}

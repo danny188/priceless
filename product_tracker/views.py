@@ -9,12 +9,14 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 
 from product_tracker.tables import ProductTable
-from .tasks import refresh_all_products, refresh_all_products_for_user
+from .tasks import refresh_all_products, refresh_all_products_for_user, send_product_sale_summary_emails
 from django.views.decorators.csrf import csrf_exempt
 import celery.result
 import django_filters
 from django import forms
 from bs4 import BeautifulSoup
+
+from users.models import User
 
 
 @login_required
@@ -211,6 +213,16 @@ def job_update_all_products_view(request):
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
         group_result_id = refresh_all_products()
+
+        return JsonResponse({'group_result_id': group_result_id})
+
+
+@csrf_exempt
+def job_send_product_sale_summary_emails_view(request):
+    app_password = request.META.get('HTTP_APP_PASSWORD')
+
+    if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        group_result_id = send_product_sale_summary_emails()
 
         return JsonResponse({'group_result_id': group_result_id})
 

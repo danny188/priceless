@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load my_tags %}
+{% load render_table from django_tables2 %}
 
 {% block title %}Tracked Products{% endblock %}
 
@@ -131,7 +132,7 @@
   </form>
 </section>
 
-{% load render_table from django_tables2 %}
+
 <section class="section products-table">
   {% render_table product_table %}
 
