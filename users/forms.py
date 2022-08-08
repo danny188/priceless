@@ -20,4 +20,4 @@ class UpdateUserSettingsForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'email_alert_frequency', 'email_alert_day_of_week', 'pause_email_alerts']
+        fields = ['email', 'receive_email_as_products_go_on_sale', 'receive_product_sale_summary_email', 'product_sale_summary_email_day_of_week']

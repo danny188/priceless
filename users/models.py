@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -37,22 +38,18 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
 
-    EMAIL_ALERT_FREQUENCY_CHOICES = [('d', 'daily'),
-                               ('w', 'weekly'),]
-    email_alert_frequency = models.CharField(max_length=1, choices=EMAIL_ALERT_FREQUENCY_CHOICES, default='d')
+    PRODUCT_SUMMARY_EMAIL_DAY_OF_WEEK_CHOICES = [('mon', 'Monday'),
+                                                ('tue', 'Tuesday'),
+                                                ('wed', 'Wednesday'),
+                                                ('thu', 'Thursday'),
+                                                ('fri', 'Friday'),
+                                                ('sat', 'Saturday'),
+                                                ('sun', 'Sunday'),]
 
-    EMAIL_ALERT_DAY_OF_WEEK_CHOICES = [('mon', 'Monday'),
-                                       ('tue', 'Tuesday'),
-                                       ('wed', 'Wednesday'),
-                                       ('thu', 'Thursday'),
-                                       ('fri', 'Friday'),
-                                       ('sat', 'Saturday'),
-                                       ('sun', 'Sunday'),]
+    receive_email_as_products_go_on_sale = models.BooleanField(default=True)
+    receive_product_sale_summary_email = models.BooleanField(default=True, verbose_name="Receive weekly product sale summary email")
 
-
-    email_alert_day_of_week = models.CharField(verbose_name="Day of week to email (applies only if email frequency is weekly)", max_length=3, choices=EMAIL_ALERT_DAY_OF_WEEK_CHOICES, default='fri')
-
-    pause_email_alerts = models.BooleanField(default=False)
+    product_sale_summary_email_day_of_week = models.CharField(verbose_name="Day of week to receive product sale summary email", max_length=3, choices=PRODUCT_SUMMARY_EMAIL_DAY_OF_WEEK_CHOICES, default='fri')
 
     objects = UserManager()
 
