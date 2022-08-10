@@ -18,11 +18,6 @@ from bs4 import BeautifulSoup
 
 from users.models import User
 
-import environ
-env = environ.Env(DEBUG=(bool, False))
-# reading .env file
-environ.Env.read_env()
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -227,6 +222,8 @@ def job_update_all_products_view(request):
         return JsonResponse({'group_result_id': group_result_id})
     else:
         logger.error("scheduled job (update all products in db) activated but wrong app password used")
+        print("received app pw is: " + app_password)
+        print("app pw in environment is: " + os.environ.get("APP_PASSWORD", "secret"))
 
 
 @csrf_exempt
