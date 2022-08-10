@@ -21,7 +21,6 @@ class Product(models.Model):
     current_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     was_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     product_type_by_shop = models.CharField(max_length=300)
-    dummy_field = models.BooleanField(null=True, blank=True)
 
     SHOP_CHOICES = (('Woolworths', 'Woolworths'),)
 
