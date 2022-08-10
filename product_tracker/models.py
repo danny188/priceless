@@ -3,7 +3,7 @@ from django.db import models
 from users.models import User
 
 import requests
-from datetime import datetime
+from django.utils import timezone
 
 import re
 import os
@@ -122,7 +122,7 @@ class WoolworthsProduct(Product):
         self.name = json['Product']['Name']
         self.was_price = json['Product']['WasPrice']
         self.image_url = json['Product']['SmallImageFile']
-        self.last_price_check = datetime.now()
+        self.last_price_check = timezone.now()
         self.savings_dollars = self.calculate_savings_dollars()
         self.savings_percentage = self.calculate_savings_percentage()
 
