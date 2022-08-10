@@ -20,7 +20,7 @@ class ProductTable(tables.Table):
     was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
     savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
     savings_dollars = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Savings $")
-    last_price_check = tables.TemplateColumn("{{ record.last_price_check|date:'Y-m-d h:i a' }}")
+    last_price_check = tables.TemplateColumn("{{ record.last_price_check|date:'Y-m-d H:i' }}")
 
     name = tables.TemplateColumn("""
     {% if record.savings_dollars %}
@@ -76,7 +76,7 @@ class ProductTableForEmail(tables.Table):
     price = tables.TemplateColumn("${{ record.current_price }}")
     was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
     savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
-    last_price_check = tables.TemplateColumn("{{ record.last_price_check|date:'Y-m-d h:i a' }}")
+    last_price_check = tables.TemplateColumn("{{ record.last_price_check|date:'Y-m-d H:i' }}")
 
     name = tables.TemplateColumn("""
         <a href="{{record.url}}"><strong>{{ record.name }}</strong></a>
