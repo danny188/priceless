@@ -12,4 +12,4 @@ class Command(BaseCommand):
         data = {}
         headers = {'App-Password': os.environ.get("APP_PASSWORD", 'secret')}
 
-        r = requests.post(url, data=json.dumps(data), headers=headers)
+        r = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
