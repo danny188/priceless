@@ -92,15 +92,7 @@ WSGI_APPLICATION = 'priceless_project.wsgi.application'
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 DATABASES = {
-     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': env("DATABASE_NAME"),
-    #     'USER': env("DATABASE_USER"),
-    #     'PASSWORD': env("DATABASE_PASSWORD"),
-    #     'HOST': env("DATABASE_HOST"),
-    #     'PORT': env("DATABASE_PORT"),
-    # }
+    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
 }
 
 
@@ -187,3 +179,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# over specified settings in development
+if os.environ.get('DJANGO_DEVELOPMENT'):
+    from .settings_dev import *
+else:
+    print("using prod settings")
