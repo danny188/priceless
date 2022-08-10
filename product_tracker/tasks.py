@@ -14,8 +14,8 @@ from users.models import User
 @shared_task
 def refresh_product(id):
     product = Product.objects.get(pk=id)
-    product.fetch_price()
-    product.save()
+    if product.fetch_price():
+        product.save()
 
 
 @shared_task

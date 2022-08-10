@@ -92,15 +92,18 @@ class WoolworthsProduct(Product):
         response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS, proxies=proxies, verify=False)
         logger.info('response from url endpoint received')
         logger.info("response status code is " + str(response.status_code))
+        logger.debug("response text is " + str(response.text))
 
         if response.status_code != 200:
             logger.error(f"error response from product url endpoint - status_code = {response.status_code}.")
             logger.error("response text is " + response.text)
+        else:
+            json = response.json()
+            return json
 
-        logger.debug("response text is " + str(response.text))
 
-        json = response.json()
-        return json
+
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -139,7 +142,11 @@ class WoolworthsProduct(Product):
     def fetch_price(self):
         api_endpoint = self.get_api_endpoint()
         json = WoolworthsProduct.fetch_data(api_endpoint)
-        self.parse_data(json)
+        if json:
+            self.parse_data(json)
+            return True
+        else:
+            logger.error(f"product {self.name} failed to fetch_price")
 
 
 
