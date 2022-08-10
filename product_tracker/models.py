@@ -1,3 +1,4 @@
+from distutils.log import error
 from django.db import models
 from users.models import User
 
@@ -86,6 +87,11 @@ class WoolworthsProduct(Product):
         response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS, proxies=proxies, verify=False)
         logger.info('response from url endpoint received')
         logger.info("response status code is " + str(response.status_code))
+
+        if response.status_code != 200:
+            logger.error(f"error response from product url endpoint - status_code = {response.status_code}.")
+            logger.error("response text is " + response.text)
+
         logger.debug("response text is " + str(response.text))
 
         json = response.json()

@@ -35,6 +35,7 @@ DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = ['pricelessapp.herokuapp.com']
 
+ADMINS = [('Daniel', 'thepricelessapp@gmail.com'),]
 
 # Application definition
 
@@ -188,10 +189,15 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
     },
     'loggers': {
         '': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
