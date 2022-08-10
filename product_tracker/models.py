@@ -8,6 +8,11 @@ from django.utils import timezone
 import re
 import os
 
+import environ
+env = environ.Env(DEBUG=(bool, False))
+# reading .env file
+environ.Env.read_env()
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -73,7 +78,7 @@ class WoolworthsProduct(Product):
     @classmethod
     def fetch_data(cls, url):
         proxies = {
-            'https': os.environ.get('HTTPS_PROXY'),
+            'https': env('MY_HTTPS_PROXY'),
         }
         logger.info('request sent to url endpoint: ' + url)
 

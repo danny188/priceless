@@ -18,6 +18,11 @@ from bs4 import BeautifulSoup
 
 from users.models import User
 
+import environ
+env = environ.Env(DEBUG=(bool, False))
+# reading .env file
+environ.Env.read_env()
+
 import logging
 
 logger = logging.getLogger(__name__)

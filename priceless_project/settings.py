@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
-import environ
+
 import dj_database_url
 import os
 
+import environ
 env = environ.Env(DEBUG=(bool, False))
 # reading .env file
 environ.Env.read_env()
@@ -214,8 +215,8 @@ LOGGING = {
     },
 }
 
-# set proxy
-os.environ['HTTPS_PROXY'] = env('HTTPS_PROXY')
+# # set proxy
+# os.environ['HTTPS_PROXY'] = env('HTTPS_PROXY')
 
 # over specified settings in development
 if os.environ.get('DJANGO_DEVELOPMENT'):
