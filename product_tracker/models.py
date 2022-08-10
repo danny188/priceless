@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.db import models
 from users.models import User
 
@@ -6,6 +5,10 @@ import requests
 from datetime import datetime
 
 import re
+import os
+
+import logging
+logger = logging.getLogger(__name__)
 
 class Product(models.Model):
     on_sale = models.BooleanField(default=False)
@@ -68,11 +71,24 @@ class WoolworthsProduct(Product):
 
     @classmethod
     def fetch_data(cls, url):
-        print("inside fetch_data, url=" + url)
-        response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS)
+        proxies = {
+            'https': os.environ.get('HTTPS_PROXY'),
+        }
+        logger.info('request sent to url endpoint: ' + url)
+
+        # for enabling logs of requests module
+        # logging.basicConfig()
+        # logging.getLogger().setLevel(logging.DEBUG)
+        # requests_log = logging.getLogger("requests.packages.urllib3")
+        # requests_log.setLevel(logging.DEBUG)
+        # requests_log.propagate = True
+
+        response = requests.get(url, cookies=cls.COOKIES, headers=cls.HEADERS, proxies=proxies, verify=False)
+        logger.info('response from url endpoint received')
+        logger.info("response status code is " + str(response.status_code))
+        logger.debug("response text is " + str(response.text))
+
         json = response.json()
-        print('data coming back from Woolies?')
-        print(json)
         return json
 
     def __init__(self, *args, **kwargs):

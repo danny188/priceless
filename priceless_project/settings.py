@@ -208,6 +208,9 @@ LOGGING = {
     },
 }
 
+# set proxy
+os.environ['HTTPS_PROXY'] = env('HTTPS_PROXY')
+
 # over specified settings in development
 if os.environ.get('DJANGO_DEVELOPMENT'):
     from .settings_dev import *
