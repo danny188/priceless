@@ -20,7 +20,7 @@ class Product(models.Model):
     last_price_check = models.DateTimeField(null=True)
     current_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     was_price = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
-    product_type_by_shop = models.CharField(max_length=200)
+    product_type_by_shop = models.CharField(max_length=300)
 
     SHOP_CHOICES = (('Woolworths', 'Woolworths'),)
 
