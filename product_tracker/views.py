@@ -216,9 +216,12 @@ def job_update_all_products_view(request):
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        logger.info("scheduled job activated: update all products in db")
         group_result_id = refresh_all_products()
 
         return JsonResponse({'group_result_id': group_result_id})
+    else:
+        logger.error("scheduled job (update all products in db) activated but wrong app password used")
 
 
 @csrf_exempt
@@ -226,16 +229,22 @@ def job_send_product_sale_summary_emails_view(request):
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        logger.info("scheduled job activated: send product sale summary emails")
         group_result_id = send_product_sale_summary_emails()
 
         return JsonResponse({'group_result_id': group_result_id})
+    else:
+        logger.error("scheduled job (send product sale summary emails) activated but wrong app password used")
+
 
 @csrf_exempt
 def job_send_daily_product_sale_emails_view(request):
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
+        logger.info("scheduled job activated: send daily product sale emails")
         group_result_id = send_daily_product_sale_emails()
 
         return JsonResponse({'group_result_id': group_result_id})
-
+    else:
+        logger.error("scheduled job (send daily product sale emails) activated but wrong app password used")
