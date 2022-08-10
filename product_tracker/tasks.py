@@ -59,20 +59,8 @@ def refresh_all_products_for_user(user):
 
     # result.join()
 
-
-@shared_task
-def send_product_sale_summary_email_for_user(userId, notify_new_sales_only=False):
-    '''Sends a notification email to a user containing a list of products on sale'''
-
-    user = User.objects.get(pk=userId)
-
-    if notify_new_sales_only:
-        intro = 'Here are the products that newly went on sale:'
-        products_on_sale = user.product_set.filter(on_sale=True).filter(sale_notified_to_user=False)
-    else:
-        intro = 'Here are your products that are currently on sale:'
-        products_on_sale = user.product_set.filter(on_sale=True)
-
+def send_product_sale_email_for_user(user, products_on_sale, intro, send_even_if_nothing_on_sale):
+    # user = User.objects.get(pk=userId)
 
     table = ProductTableForEmail(products_on_sale)
     num_products_on_sale = products_on_sale.count()
@@ -100,8 +88,29 @@ def send_product_sale_summary_email_for_user(userId, notify_new_sales_only=False
 
     plain_message = generatePlainTextMessage()
 
-    if not notify_new_sales_only or num_products_on_sale > 0:
+    if send_even_if_nothing_on_sale or num_products_on_sale > 0:
         mail.send_mail("Priceless Updates", plain_message, from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=html_message)
+
+
+@shared_task
+def send_daily_product_sale_email_for_user(userId):
+    '''Sends a daily notification email to user informing of new sales (no email is sent if nothing on sale)'''
+
+    user = User.objects.get(pk=userId)
+    products_on_sale = user.product_set.filter(on_sale=True).filter(sale_notified_to_user=False)
+    send_product_sale_email_for_user(user, products_on_sale,'Here are the products that newly went on sale:', False)
+
+
+@shared_task
+def send_product_sale_summary_email_for_user(userId):
+    '''Sends a weekly notification email to a user containing a list of products on sale'''
+
+    user = User.objects.get(pk=userId)
+
+    #todo: add check if user wants weekly summary at all, and whether day of week matches
+
+    products_on_sale = user.product_set.filter(on_sale=True)
+    send_product_sale_email_for_user(user, products_on_sale, 'Here are your products that are currently on sale:', True)
 
 
 @shared_task
