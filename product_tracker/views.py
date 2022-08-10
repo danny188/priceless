@@ -18,6 +18,10 @@ from bs4 import BeautifulSoup
 
 from users.models import User
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @login_required
 def products_view(request):

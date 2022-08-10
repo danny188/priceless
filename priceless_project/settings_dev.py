@@ -2,6 +2,7 @@ import environ
 
 import os
 
+
 env = environ.Env(DEBUG=(bool, False))
 # reading .env file
 environ.Env.read_env()
@@ -19,5 +20,3 @@ DATABASES = {
         'PORT': env("DATABASE_PORT"),
     }
 }
-
-print("using development settings")
