@@ -222,8 +222,6 @@ def job_update_all_products_view(request):
         return JsonResponse({'group_result_id': group_result_id})
     else:
         logger.error("scheduled job (update all products in db) activated but wrong app password used")
-        print("received app pw is: " + app_password)
-        print("app pw in environment is: " + os.environ.get("APP_PASSWORD", "secret"))
 
 
 @csrf_exempt
