@@ -137,7 +137,12 @@ class WoolworthsProduct(Product):
         if self.current_price != self.was_price and self.was_price:
             self.on_sale = True
         else:
+            if self.on_sale:
+                # if previously on sale, reset flag so user is notified of next sale
+                self.sale_notified_to_user = False
+
             self.on_sale = False
+
 
     def fetch_price(self):
         api_endpoint = self.get_api_endpoint()
