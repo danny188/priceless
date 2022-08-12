@@ -10,6 +10,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from users.models import User
 
+from django.utils import timezone
+
 
 @shared_task
 def refresh_product(id):
@@ -106,9 +108,6 @@ def send_product_sale_summary_email_for_user(userId):
     '''Sends a weekly notification email to a user containing a list of products on sale'''
 
     user = User.objects.get(pk=userId)
-
-    #todo: add check if user wants weekly summary at all, and whether day of week matches
-
     products_on_sale = user.product_set.filter(on_sale=True)
     send_product_sale_email_for_user(user, products_on_sale, 'Here are your products that are currently on sale:', True)
 
@@ -117,7 +116,8 @@ def send_product_sale_summary_email_for_user(userId):
 def send_product_sale_summary_emails():
     '''Sends notification emails to all users containing a list of products on sale'''
 
-    users = User.objects.all()
+    current_iso_week_day = timezone.now().isoweekday()
+    users = User.objects.filter(receive_product_sale_summary_email=True).filter(summary_email_day_of_week=current_iso_week_day)
 
     job = group([send_product_sale_summary_email_for_user.s(user.id) for user in users])
 
@@ -126,12 +126,13 @@ def send_product_sale_summary_emails():
 
     return result.id
 
+
 @shared_task
 def send_daily_product_sale_emails():
     '''Sends notification emails to all users containing a list of products on sale
         that weren't previously notified to the user'''
 
-    users = User.objects.all()
+    users = User.objects.filter(receive_email_as_products_go_on_sale=True)
 
     job = group([send_product_sale_summary_email_for_user.s(user.id, True) for user in users])
 
