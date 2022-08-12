@@ -1,6 +1,7 @@
 from pydoc import plain
 from celery import shared_task, group
 from django.http import HttpResponse, JsonResponse
+from product_tracker.exceptions import ProductURLError
 
 from product_tracker.models import Product
 from .tables import ProductTableForEmail
@@ -16,8 +17,11 @@ from django.utils import timezone
 @shared_task
 def refresh_product(id):
     product = Product.objects.get(pk=id)
-    if product.fetch_price():
-        product.save()
+    try:
+        if product.fetch_price():
+            product.save()
+    except ProductURLError:
+        pass
 
 
 @shared_task

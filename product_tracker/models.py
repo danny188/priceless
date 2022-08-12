@@ -1,12 +1,16 @@
 from distutils.log import error
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from django.db import models
+from product_tracker.exceptions import ProductURLError
 from users.models import User
 
 import requests
 from django.utils import timezone
+import json
 
 import re
-import os
+from urllib.parse import urlparse
 
 import environ
 env = environ.Env(DEBUG=(bool, False))
@@ -33,6 +37,41 @@ class Product(models.Model):
     savings_percentage = models.IntegerField(blank=True, null=True)
     savings_dollars = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
 
+
+    @classmethod
+    def get_hostname(cls, url):
+        return urlparse(url).hostname.replace('www.', '')
+
+
+    @classmethod
+    def get_product_model(cls, hostname):
+        if hostname == 'woolworths.com.au':
+            return WoolworthsProduct
+
+
+    @classmethod
+    def validate_url(cls, url, user):
+        """Checks if a product url is valid"""
+        # checks url looks like an url
+        try:
+            url_validator = URLValidator()
+            url_validator(url)
+        except ValidationError:
+            raise ProductURLError("Invalid URL")
+
+        # check shop url is one of the supported shops
+        url_hostname = cls.get_hostname(url)
+        # if product model not found, it indicates that the shop of current url is not supported
+        if not cls.get_product_model(url_hostname):
+            supported_shops = list(map(lambda x: x[0], cls.SHOP_CHOICES))
+            raise ProductURLError('URL hostname not currently supported. Currently supported shops include: ' + ','.join(supported_shops))
+
+        # check url doens't already exist for user
+        if user.product_set.filter(url=url):
+            raise ProductURLError('An identical product URL already exists')
+
+
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -42,6 +81,7 @@ class Product(models.Model):
                 if self.product_type_by_shop == _class.__name__:
                     self.__class__ = _class
                     break
+
 
     def calculate_savings_dollars(self):
         if self.was_price and self.current_price:
@@ -56,6 +96,7 @@ class Product(models.Model):
             return 0
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class WoolworthsProduct(Product):
     class Meta:
@@ -77,6 +118,13 @@ class WoolworthsProduct(Product):
 
     @classmethod
     def fetch_data(cls, url):
+        # def is_json(data):
+        #     try:
+        #         json.loads(data)
+        #     except ValueError:
+        #         return False
+        #     return True
+
         proxies = {
             'https': env('MY_HTTPS_PROXY'),
         }
@@ -97,12 +145,14 @@ class WoolworthsProduct(Product):
         if response.status_code != 200:
             logger.error(f"error response from product url endpoint - status_code = {response.status_code}.")
             logger.error("response text is " + response.text)
+            raise ProductURLError('Product data could not be retrieved')
         else:
-            json = response.json()
-            return json
-
-
-
+            try:
+                json_obj = response.json()
+                return json_obj
+            except:
+                logger.error('Response from product api endpoint is not json')
+                raise ProductURLError('Product data could not be retrieved')
 
 
     def __init__(self, *args, **kwargs):
@@ -112,24 +162,24 @@ class WoolworthsProduct(Product):
 
     def get_api_endpoint(self):
         def get_stock_code(url):
-            pattern = r"productdetails/(\d*)?"
+            pattern = r"woolworths.com.au/shop/productdetails/(\d*)?"
             match = re.search(pattern, url)
             if match:
                 stock_code = match.group(1)
+                return stock_code
             else:
-                stock_code = None
-
-            return stock_code
+                logger.error('Error parsing URL for product stock code. Product URL was ' + url)
+                raise ProductURLError(f'Error obtaining product stock code. Please check that you have entered a valid URL for a {self.shop} product')
 
         stock_code = get_stock_code(self.url)
         return f"https://www.woolworths.com.au/apis/ui/product/detail/{stock_code}"
 
 
-    def parse_data(self, json):
-        self.current_price = json['Product']['Price']
-        self.name = json['Product']['Name']
-        self.was_price = json['Product']['WasPrice']
-        self.image_url = json['Product']['SmallImageFile']
+    def parse_data(self, json_obj):
+        self.current_price = json_obj['Product']['Price']
+        self.name = json_obj['Product']['Name']
+        self.was_price = json_obj['Product']['WasPrice']
+        self.image_url = json_obj['Product']['SmallImageFile']
         self.last_price_check = timezone.now()
         self.savings_dollars = self.calculate_savings_dollars()
         self.savings_percentage = self.calculate_savings_percentage()
@@ -146,12 +196,16 @@ class WoolworthsProduct(Product):
 
     def fetch_price(self):
         api_endpoint = self.get_api_endpoint()
-        json = WoolworthsProduct.fetch_data(api_endpoint)
-        if json:
-            self.parse_data(json)
+        json_obj = self.__class__.fetch_data(api_endpoint)
+
+        if json_obj and json_obj['Product']:  # check if product exists
+            self.parse_data(json_obj)
             return True
         else:
-            logger.error(f"product {self.name} failed to fetch_price")
+            logger.error(f"Product fetch_price failed. Invalid data in json.")
+            logger.error('json data: ' + str(json_obj))
+            raise ProductURLError('Product data obtained was invalid')
+
 
 
 

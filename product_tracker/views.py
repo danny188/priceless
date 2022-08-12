@@ -4,6 +4,7 @@ from difflib import restore
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from product_tracker.exceptions import ProductURLError
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -17,6 +18,8 @@ from django import forms
 from bs4 import BeautifulSoup
 
 from users.models import User
+
+from urllib.parse import urlparse
 
 import logging
 
@@ -62,16 +65,28 @@ def products_view(request):
 
 def add_product_view(request):
     if request.method == "POST":
-        # todo check duplicate url
-        # todo check valid url
-        new_url = request.POST.get("new_url")
+        new_url = request.POST.get("new_url").strip()
 
-        # todo: instantiate product class by product shop type
-        product = WoolworthsProduct.objects.create(url=new_url, user=request.user)
-        product.fetch_price()
-        product.save()
+        try:
+            # check valid url
+            Product.validate_url(new_url, request.user)
 
-        messages.success(request, product.name + ' has been added.', extra_tags="is-success is-light")
+            # validate beofre save
+            url_obj = urlparse(new_url)
+            hostname = url_obj.hostname.replace('www.', '')
+
+            product_model = Product.get_product_model(hostname)
+
+            # instantiate product class by product shop type
+            product = product_model.objects.create(url=new_url, user=request.user)
+
+            product.fetch_price()
+            product.save()
+
+            messages.success(request, product.name + ' has been added.', extra_tags="is-success is-light")
+        except ProductURLError as url_error:
+            messages.error(request, f"Product could not be added: {url_error.message}", extra_tags="is-danger is-light")
+
 
     return render(request, "product_tracker/add_product.html")
 
