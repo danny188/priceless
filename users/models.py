@@ -1,3 +1,4 @@
+from calendar import SATURDAY, SUNDAY
 from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -38,18 +39,19 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
 
-    PRODUCT_SUMMARY_EMAIL_DAY_OF_WEEK_CHOICES = [('mon', 'Monday'),
-                                                ('tue', 'Tuesday'),
-                                                ('wed', 'Wednesday'),
-                                                ('thu', 'Thursday'),
-                                                ('fri', 'Friday'),
-                                                ('sat', 'Saturday'),
-                                                ('sun', 'Sunday'),]
+    class DayOfWeek(models.IntegerChoices):
+        MONDAY = 1
+        TUESDAY = 2
+        WEDNESDAY = 3
+        THURSDAY = 4
+        FRIDAY = 5
+        SATURDAY = 6
+        SUNDAY = 7
 
     receive_email_as_products_go_on_sale = models.BooleanField(default=True)
     receive_product_sale_summary_email = models.BooleanField(default=True, verbose_name="Receive weekly product sale summary email")
 
-    product_sale_summary_email_day_of_week = models.CharField(verbose_name="Day of week to receive product sale summary email", max_length=3, choices=PRODUCT_SUMMARY_EMAIL_DAY_OF_WEEK_CHOICES, default='fri')
+    summary_email_day_of_week = models.IntegerField(verbose_name="Day of week to receive product sale summary email", choices=DayOfWeek.choices, default=1)
 
     objects = UserManager()
 
