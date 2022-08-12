@@ -134,7 +134,7 @@ def send_daily_product_sale_emails():
 
     users = User.objects.filter(receive_email_as_products_go_on_sale=True)
 
-    job = group([send_product_sale_summary_email_for_user.s(user.id, True) for user in users])
+    job = group([send_daily_product_sale_email_for_user.s(user.id) for user in users])
 
     result = job.apply_async(expires=120)
     result.save()
