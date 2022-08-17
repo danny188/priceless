@@ -101,6 +101,37 @@ def add_product_view(request):
 
 #         return HttpResponseRedirect('/products')
 
+
+@login_required
+def refresh_single_product_view(request, id):
+    if request.method == "POST":
+        product = request.user.product_set.get(pk=id)
+
+        if product:
+            product.fetch_price()
+            product.save()
+
+            # generate table
+            filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
+            table = ProductTable(filter.qs)
+
+            num_products_on_sale = filter.qs.filter(on_sale=True).count()
+
+            # get html of table
+            table_html = table.as_html(request)
+
+            # use bs to get html of row for product
+            soup = BeautifulSoup(table_html, 'html.parser')
+
+            row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
+
+            row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
+
+            return JsonResponse({
+                'row_data': list(row_tds_inner_html),
+                'num_products_on_sale': num_products_on_sale,})
+
+
 @login_required
 def products_refresh_all(request):
     if request.method == "POST":
@@ -150,7 +181,6 @@ def delete_product_view(request):
 
 @login_required
 def update_product_url_view(request):
-
     if request.method == "POST":
         product_id = request.POST.get("product_id")
         new_url = request.POST.get("updated_url")

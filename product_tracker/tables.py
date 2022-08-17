@@ -33,10 +33,18 @@ class ProductTable(tables.Table):
     actions = tables.TemplateColumn("""
     <div class="columns">
         <div class="column">
+            <button class="button refresh-product is-small is-info is-light" data-product-id="{{record.id}}">
+                Check Price
+            </button>
+        </div>
+
+        <!-- currently button not in use
+        <div class="column">
             <button class="button show-update-url-modal is-small is-info is-light js-modal-trigger" data-target="modal-js-update-product-url" data-product-id="{{record.id}}" data-product-url="{{record.url}}">
                 Update URL
             </button>
         </div>
+        -->
 
         <div class="column">
             <form id="form-delete-product-{{record.id}}" action="/product/delete" method="POST"">

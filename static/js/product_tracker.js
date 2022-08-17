@@ -95,7 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.section.products-table').addEventListener('click', (e) => {
         let $trigger = e.target;
 
-        if ($trigger.classList.contains('show-update-url-modal')) {
+        if ($trigger.classList.contains('refresh-product')) {
+            $trigger.classList.add("is-loading");
+             // ajax request to get new row data
+            let productId = e.target.dataset.productId;
+            fetch(`/product/${productId}/refresh`, {
+                method: 'post',
+                headers: {"X-CSRFToken": getCookie("csrftoken")},
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                let rowData = data['row_data'];
+                productsTable.row('#row-for-product-' + productId).data(rowData);
+
+                // update number of products on sale
+                document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
+                showTimedNotification("Product updated", 5000, ['is-success']);
+            });
+
+        } else if ($trigger.classList.contains('show-update-url-modal')) {
             const modal = $trigger.dataset.target;
             const $target = document.getElementById(modal);
             let productId = $trigger.dataset.productId;
