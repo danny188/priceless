@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from product_tracker.exceptions import ProductURLError
+from product_tracker.helpers import format_time_delta
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -20,11 +21,12 @@ from bs4 import BeautifulSoup
 from users.models import User
 
 from urllib.parse import urlparse
+from django.utils import timezone
+from datetime import timedelta
 
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 @login_required
 def products_view(request):
@@ -96,6 +98,16 @@ def refresh_single_product_view(request, id):
         product = request.user.product_set.get(pk=id)
 
         if product:
+            # only refresh product if max refresh frequency not exceeded
+            now = timezone.now()
+            time_diff = now - product.last_price_check
+            next_refresh_time_permitted = product.last_price_check + timedelta(minutes=Product.MAX_REFRESH_FREQUENCY)
+            waiting_time = next_refresh_time_permitted - now
+            if (time_diff) < timedelta(minutes=Product.MAX_REFRESH_FREQUENCY):
+                return JsonResponse({
+                    'result': 'info',
+                    'msg': 'A product refresh is limited to every ' + str(Product.MAX_REFRESH_FREQUENCY) + ' minutes. Please try again in ' + format_time_delta(waiting_time)})
+
             try:
                 product.fetch_price()
                 product.save()

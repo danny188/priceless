@@ -21,6 +21,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Product(models.Model):
+    MAX_REFRESH_FREQUENCY = 5  # limit to every 5 minutes at most
+
     on_sale = models.BooleanField(default=False)
     sale_notified_to_user = models.BooleanField(default=False)
     url = models.URLField(max_length=2000)
@@ -36,7 +38,6 @@ class Product(models.Model):
     shop = models.CharField(max_length=200, choices=SHOP_CHOICES)
     savings_percentage = models.IntegerField(blank=True, null=True)
     savings_dollars = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
-
 
     @classmethod
     def get_hostname(cls, url):

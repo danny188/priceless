@@ -113,6 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     // update number of products on sale
                     document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
                     showTimedNotification("Product updated", 5000, ['is-success']);
+                } else if (data['result'] === 'info') {
+                    showTimedNotification(data['msg'], 5000, ['is-info']);
+                    $trigger.classList.remove("is-loading");
                 } else {
                     // show error
                     showTimedNotification(data['error_msg'], 8000, ['is-danger']);
