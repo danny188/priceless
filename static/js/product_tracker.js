@@ -138,6 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let productId = $trigger.dataset.productId;
 
                 let deleteProductForm = document.querySelector('#form-delete-product-' + productId);
+
+                $trigger.classList.add("is-loading");
                 // send ajax request
                 fetch('/product/delete', {
                     method: 'post',
@@ -163,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (data['result'] === 'error') {
                         // display error
                         showTimedNotification("Error: " + data['error_msg'], 5000, ['is-danger']);
+                        $trigger.classList.remove("is-loading");
                     }
                 });
             }
