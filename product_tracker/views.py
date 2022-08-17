@@ -28,34 +28,19 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def products_view(request):
-    # urls = ['https://www.woolworths.com.au/shop/productdetails/176564/d-orsogna-shortcut-bacon']
+    """Displays a list of user's products
 
-    # bacon = WoolworthsProduct(url=urls[0])
-    # bacon.fetch_price()
-
-
-    # bacon.save()
-
-    # request.user.products.add(bacon)
-
+    Returns:
+        HttpResponse: page to display user's products
+    """
     products = sorted(request.user.product_set.all().order_by('name'), key = lambda p: -p.calculate_savings_dollars())
     on_sale_products = request.user.product_set.filter(on_sale=True)
 
-    # charcoal = products.get(pk=10)
-    # charcoal.image_url = 'https://cdn0.woolworths.media/content/wowproductimages/small/176564.jpg'
-    # charcoal.save()
-
     filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
 
-    # paginator = Paginator(filter.qs, 4)
-
-    # page_number = request.GET.get('page')
-    # page_obj = paginator.get_page(page_number)
-
     table = ProductTable(filter.qs)
-    # print(table.as_html(request))
+
     context = {'products': products,
-            #    'page_obj': page_obj,
                'on_sale_products': on_sale_products,
                'filter': filter,
                'product_table': table}
@@ -64,6 +49,11 @@ def products_view(request):
 
 
 def add_product_view(request):
+    """Add a product to a user's collection
+
+    Returns:
+        HttpResponse: page to add a product
+    """
     if request.method == "POST":
         new_url = request.POST.get("new_url").strip()
 
@@ -91,49 +81,63 @@ def add_product_view(request):
     return render(request, "product_tracker/add_product.html")
 
 
-# def update_product_view(request):
-#     if request.method == "POST":
-#         product_id = request.POST.get("product_pk")
-#         product = WoolworthsProduct.objects.get(pk=product_id)
-#         product.url = request.POST.get("updated_url")
-#         product.fetch_price()
-#         product.save()
-
-#         return HttpResponseRedirect('/products')
-
-
 @login_required
 def refresh_single_product_view(request, id):
+    """Refresh a single product
+
+    Args:
+        request (_type_): _description_
+        id (_type_): _description_
+
+    Returns:
+        JsonResponse: result of operation, and product counts if successful
+    """
     if request.method == "POST":
         product = request.user.product_set.get(pk=id)
 
         if product:
-            product.fetch_price()
-            product.save()
+            try:
+                product.fetch_price()
+                product.save()
 
-            # generate table
-            filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
-            table = ProductTable(filter.qs)
+                # generate table
+                filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
+                table = ProductTable(filter.qs)
 
-            num_products_on_sale = filter.qs.filter(on_sale=True).count()
+                num_products_on_sale = filter.qs.filter(on_sale=True).count()
 
-            # get html of table
-            table_html = table.as_html(request)
+                # get html of table
+                table_html = table.as_html(request)
 
-            # use bs to get html of row for product
-            soup = BeautifulSoup(table_html, 'html.parser')
+                # use bs to get html of row for product
+                soup = BeautifulSoup(table_html, 'html.parser')
 
-            row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
+                row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
 
-            row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
+                row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
 
+                return JsonResponse({
+                    'result': 'success',
+                    'row_data': list(row_tds_inner_html),
+                    'num_products_on_sale': num_products_on_sale,})
+            except ProductURLError as url_error:
+                return JsonResponse({
+                    'result': 'error',
+                    'error_msg': url_error.message,})
+        else:
             return JsonResponse({
-                'row_data': list(row_tds_inner_html),
-                'num_products_on_sale': num_products_on_sale,})
+                    'result': 'error',
+                    'error_msg': 'Product not found'})
 
 
 @login_required
 def products_refresh_all(request):
+    """Refresh all products in the database
+
+    Returns:
+        JsonResponse:
+            group_result_id: celery group id for monitoring tasks list
+    """
     if request.method == "POST":
         group_result_id = refresh_all_products_for_user(request.user)
 
@@ -142,6 +146,17 @@ def products_refresh_all(request):
 
 @login_required
 def get_progress_view(request):
+    """Returns the number of completed and total tasks given a Celery group_result_id
+
+    Args:
+        request object query parameter:
+            group_result_id - Celery group_result_id
+
+    Returns:
+        JsonResponse:
+            total - total number of tasks
+            completed_count - number of completed tasks
+    """
     if request.method == "GET":
         group_set_id = request.GET.get('group_result_id')
         restored_group_result = celery.result.GroupResult.restore(group_set_id)
@@ -156,6 +171,14 @@ def get_progress_view(request):
 
 @login_required
 def delete_product_view(request):
+    """Deletes a single product
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        json: result of operation, product number counts
+    """
     if request.method == "POST":
         product_id = request.POST.get("product_id")
         qs = request.user.product_set
@@ -181,6 +204,16 @@ def delete_product_view(request):
 
 @login_required
 def update_product_url_view(request):
+    """Updates the url of a product
+
+    Args:
+        request object query parameter:
+            product_id - id of product
+            updated_url - new url of product
+
+    Returns:
+        JsonResponse: _description
+    """
     if request.method == "POST":
         product_id = request.POST.get("product_id")
         new_url = request.POST.get("updated_url")
@@ -188,41 +221,54 @@ def update_product_url_view(request):
         product = request.user.product_set.get(pk=product_id)
 
         if product:
-            product.url = new_url
-            product.fetch_price()
-            product.save()
-            context = {'product': product}
+            try:
+                product.url = new_url
+                product.fetch_price()
+                product.save()
+                context = {'product': product}
 
-            # generate table
-            filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
-            table = ProductTable(filter.qs)
+                # generate table
+                filter = ProductFilter(request.GET, queryset=request.user.product_set.all())
+                table = ProductTable(filter.qs)
 
-            num_products_on_sale = filter.qs.filter(on_sale=True).count()
+                num_products_on_sale = filter.qs.filter(on_sale=True).count()
 
-            # get html of table
-            table_html = table.as_html(request)
+                # get html of table
+                table_html = table.as_html(request)
 
-            # use bs to get html of row for product
-            soup = BeautifulSoup(table_html, 'html.parser')
-            product_row_html = soup.select_one('#row-for-product-' + str(product.id))
+                # use bs to get html of row for product
+                soup = BeautifulSoup(table_html, 'html.parser')
+                product_row_html = soup.select_one('#row-for-product-' + str(product.id))
 
-            row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
+                row_tds = soup.select('#row-for-product-' + str(product.id) + ' td')
 
-            row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
+                row_tds_inner_html = map(lambda td: td.decode_contents().strip(), row_tds)
 
 
+                return JsonResponse({
+                    'row_data': list(row_tds_inner_html),
+                    'num_products_on_sale': num_products_on_sale,})
+            except ProductURLError as url_error:
+                return JsonResponse({
+                    'result': 'error',
+                    'error_msg': url_error.message,})
+        else:
             return JsonResponse({
-                'row_data': list(row_tds_inner_html),
-                'num_products_on_sale': num_products_on_sale,})
-            # return html
-            # return HttpResponse(product_row_html)
-
-            # return render(request, 'product_tracker/single_product.html', context=context)
-            # return HttpResponseRedirect('/products')
-
+            'result': 'error',
+            'msg': 'product not found'})
 
 
 def filter_on_sale(queryset, name, value):
+    """Returns a set of records filtered by products on sale, products not on sale, or all products.
+
+    Args:
+        queryset (QuerySet): original queryset
+        name (_type_): name of the model field to filter on
+        value (_type_): value to filter with
+
+    Returns:
+        QuerySet : filtered records
+    """
     if value == 'both':
         return queryset
     elif value == 'on_sale':
@@ -232,6 +278,7 @@ def filter_on_sale(queryset, name, value):
 
 
 class ProductFilter(django_filters.FilterSet):
+    """Filter for products"""
     name = django_filters.CharFilter(lookup_expr='icontains')
     current_price__gt = django_filters.NumberFilter(field_name='current_price', lookup_expr='gt')
     current_price__lt = django_filters.NumberFilter(field_name='current_price', lookup_expr='lt')
@@ -258,6 +305,11 @@ class ProductFilter(django_filters.FilterSet):
 
 @csrf_exempt
 def job_update_all_products_view(request):
+    """Update all products in the database. Designed to be called by a custom django admin command.
+
+    Returns:
+        JsonResponse: Celery group result id for tracking tasks
+    """
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
@@ -266,11 +318,16 @@ def job_update_all_products_view(request):
 
         return JsonResponse({'group_result_id': group_result_id})
     else:
-        logger.error("scheduled job (update all products in db) activated but wrong app password used")
+        logger.error("scheduled job (update all products in db): wrong app password used")
 
 
 @csrf_exempt
 def job_send_product_sale_summary_emails_view(request):
+    """Sends product sale summary emails to all users. Designed to be called by a custom django admin command.
+
+    Returns:
+        JsonResponse: Celery group result id for tracking tasks
+    """
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
@@ -279,11 +336,16 @@ def job_send_product_sale_summary_emails_view(request):
 
         return JsonResponse({'group_result_id': group_result_id})
     else:
-        logger.error("scheduled job (send product sale summary emails) activated but wrong app password used")
+        logger.error("scheduled job (send product sale summary emails): wrong app password used")
 
 
 @csrf_exempt
 def job_send_daily_product_sale_emails_view(request):
+    """Sends daily product sale emails to all users. Designed to be called by a custom django admin command.
+
+    Returns:
+        JsonResponse: Celery group result id for tracking tasks
+    """
     app_password = request.META.get('HTTP_APP_PASSWORD')
 
     if app_password == os.environ.get("APP_PASSWORD", 'secret'):
@@ -292,4 +354,4 @@ def job_send_daily_product_sale_emails_view(request):
 
         return JsonResponse({'group_result_id': group_result_id})
     else:
-        logger.error("scheduled job (send daily product sale emails) activated but wrong app password used")
+        logger.error("scheduled job (send daily product sale emails): wrong app password used")
