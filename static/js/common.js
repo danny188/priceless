@@ -9,6 +9,14 @@
 function showTimedNotification(text, duration, modifierClasses) {
     let shortLivedNotification = document.querySelector('.short-lived-notification');
 
+    // remove all classes except those in essentialClasses
+    let essentialClasses = ['notification', 'short-lived-notification', 'is-hidden'];
+    shortLivedNotification.classList.forEach(cssClass => {
+        if (!essentialClasses.some(c => c === cssClass)) {
+            shortLivedNotification.classList.remove(cssClass);
+        }
+    });
+
     // add modifier classes
     modifierClasses.forEach((modifierClass) => shortLivedNotification.classList.add(modifierClass));
 
@@ -24,12 +32,12 @@ function showTimedNotification(text, duration, modifierClasses) {
             shortLivedNotification.classList.add('is-hidden');
             shortLivedNotification.classList.remove('fade-in-notification');
             shortLivedNotification.classList.remove('fade-out-notification');
-            // remove modifier classes
-            modifierClasses.forEach((modifierClass) => shortLivedNotification.classList.remove(modifierClass));
 
             // to reset css animation, it is needed to remove and re-insert the notification div element
             const copyShortLivedNotification = shortLivedNotification.cloneNode(true);
-            shortLivedNotification.parentNode.replaceChild(copyShortLivedNotification, shortLivedNotification);
+            if (shortLivedNotification.parentNode) {
+                shortLivedNotification.parentNode.replaceChild(copyShortLivedNotification, shortLivedNotification);
+            }
             shortLivedNotification.remove();
         }, 3000);
     }, duration);
@@ -38,7 +46,7 @@ function showTimedNotification(text, duration, modifierClasses) {
 /**
  * Retrives a cookie by name
  * @param  {String} name key of cookie
- * @return {String}        value of cookie
+ * @return {String}      value of cookie
  */
 function getCookie(name) {
     let cookieValue = null;
