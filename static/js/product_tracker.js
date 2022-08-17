@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.section.products-table').addEventListener('click', (e) => {
         let $trigger = e.target;
 
+        // refreshing a single product
         if ($trigger.classList.contains('refresh-product')) {
             $trigger.classList.add("is-loading");
              // ajax request to get new row data
@@ -105,12 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then((response) => response.json())
             .then((data) => {
-                let rowData = data['row_data'];
-                productsTable.row('#row-for-product-' + productId).data(rowData);
+                if (data['result'] === 'success') {
+                    let rowData = data['row_data'];
+                    productsTable.row('#row-for-product-' + productId).data(rowData);
 
-                // update number of products on sale
-                document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
-                showTimedNotification("Product updated", 5000, ['is-success']);
+                    // update number of products on sale
+                    document.querySelector('#num-products-on-sale').textContent = data['num_products_on_sale'];
+                    showTimedNotification("Product updated", 5000, ['is-success']);
+                } else {
+                    // show error
+                    showTimedNotification(data['error_msg'], 8000, ['is-danger']);
+                    $trigger.classList.remove("is-loading");
+                }
             });
 
         } else if ($trigger.classList.contains('show-update-url-modal')) {
@@ -154,8 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // display feedback
                         showTimedNotification("Product successfully deleted", 5000, ['is-success']);
                     } else if (data['result'] === 'error') {
-                        // display feedback
-                        showTimedNotification("Error: " + data['msg'], 5000, ['is-danger']);
+                        // display error
+                        showTimedNotification("Error: " + data['error_msg'], 5000, ['is-danger']);
                     }
                 });
             }

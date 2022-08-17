@@ -198,7 +198,7 @@ def delete_product_view(request):
 
         return JsonResponse({
             'result': 'error',
-            'msg': 'product not found'
+            'error_msg': 'product not found'
         })
 
 
