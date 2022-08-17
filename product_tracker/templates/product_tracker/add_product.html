@@ -3,9 +3,11 @@
 {% block title %}Add Product{% endblock %}
 
 {% block content %}
+<script src="/static/js/product_tracker.js"></script>
+
 <section class="section add-product">
     <div class="columns">
-        <div class="column is-6 is-offset-3">
+        <div class="column is-8 is-offset-2">
             <h1 class="title">Add Product For Price Tracking</h1>
             <form id="form-add-product" action="/products/add" method="POST">
 
@@ -16,7 +18,7 @@
                     </div>
 
                     <div class="control">
-                        <input type="submit" class="button" value="Add">
+                        <button type="submit" class="button add-new-product" id="add-new-product">Add</button>
                     </div>
                 </div>
 
