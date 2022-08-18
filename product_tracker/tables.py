@@ -23,7 +23,7 @@ class ProductTable(tables.Table):
     savings_dollars = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Savings $")
     product_type_by_shop = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Shop")
     last_price_check = tables.Column()
-    shop = tables.TemplateColumn('<a href="{{ record.get_shop_base_url }}"><img src="{{ record.get_shop_favicon_url }}"></a>')
+    shop = tables.TemplateColumn('<a href="{{ record.get_shop_base_url }}"><img title="{{record.shop}}" src="{{ record.get_shop_favicon_url }}"></a>')
 
 
     def render_last_price_check(self, value):
@@ -40,7 +40,7 @@ class ProductTable(tables.Table):
     actions = tables.TemplateColumn("""
     <div class="columns">
         <div class="column">
-            <button class="button refresh-product is-small is-info is-light" data-product-id="{{record.id}}">
+            <button class="button refresh-product is-small is-info is-light is-outlined" data-product-id="{{record.id}}">
                 Check Price
             </button>
         </div>
@@ -56,7 +56,7 @@ class ProductTable(tables.Table):
         <div class="column">
             <form id="form-delete-product-{{record.id}}" action="/product/delete" method="POST"">
                 {% csrf_token %}
-                <button type="button" name="remove" value="Remove" class="button is-danger is-small is-light remove-product-button" data-product-id="{{record.id}}">Remove</button>
+                <button type="button" name="remove" value="Remove" class="button is-danger is-small is-light is-outlined remove-product-button" data-product-id="{{record.id}}">Remove</button>
                 <input type="hidden" name="product_id" value={{record.id}}>
             </form>
         </div>
