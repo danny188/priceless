@@ -1,3 +1,7 @@
+html * {
+    box-sizing: border-box;
+}
+
 nav {
     margin: 0 15px;
 }
@@ -18,19 +22,20 @@ nav {
     vertical-align: middle;
 }
 
-a.navbar-item::before {
-    display: block;
-    content: attr(text);
-    font-weight: bold;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
+.navbar-item a {
+    padding: 8px;
 }
 
-a.navbar-item:hover {
+.navbar-item a:visited {
+    color: #4A4A4A;
+}
+
+.navbar-item a:hover {
     color: #00ADB5;
     background-color: white;
-    font-weight: bold;
+    border: 1px solid #00ADB5;
+    border-radius: 5px;
+    margin: -1px;
 }
 
 .product-thumbnail {
@@ -140,4 +145,8 @@ footer a:hover {
 
 #back-to-top {
     margin-left: 10px;
+}
+
+.container {
+    min-height: 70vh;
 }

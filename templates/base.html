@@ -47,31 +47,39 @@
 
         <div class="navbar-menu " id="main_nav">
           <div class="navbar-start">
-            <a class="navbar-item" text="Home">
-              Home
-            </a>
-
             {% if user.is_authenticated %}
-            <a href={% url 'products-list' %} class="navbar-item"  text="Products">
-              Products
-            </a>
+            <div class="navbar-item">
+              <a href={% url 'products-list' %}>
+                <i class="fa fa-solid fa-list-ul fa-fw"></i>
+                Products
+              </a>
+            </div>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href={% url 'add-product' %} class="navbar-item" text="Add Product">
-              Add Product
-            </a>
+            <div class="navbar-item">
+              <a href={% url 'add-product' %}>
+                <i class="fa fa-solid fa-plus fa-fw"></i>
+                Add Product
+              </a>
+            </div>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href={% url 'settings' %} class="navbar-item"  text="Settings">
-              Settings
-            </a>
+            <div class="navbar-item">
+              <a href={% url 'settings' %}>
+                <i class="fa fa-solid fa-gear fa-fw"></i>
+                Settings
+              </a>
+            </div>
             {% endif %}
 
-            <a href={% url 'about' %} class="navbar-item"  text="About">
-              About
-            </a>
+            <div class="navbar-item">
+              <a href={% url 'about' %}>
+                <i class="fa fa-solid fa-question fa-fw"></i>
+                About
+              </a>
+            </div>
           </div>
 
 
@@ -86,23 +94,24 @@
       </nav>
 
 
-    <main class="container">
 
-        {% block content %}{% endblock content %}
-    </main>
-    <footer>
-      <div class="section">
-        <div class="columns is-flex is-justify-content-space-around">
-          <div class="column is-align-content-center">
-            Copyright <span id="copyright-year"></span> - Priceless App
-          </div>
-          <div class="column has-text-right">
-            <a href="#">Privacy Policy</a> |
-            <a href="#">Cookie Policy</a>
-            <button class="button" id="back-to-top"><i class="fa fa-solid fa-angle-up fw"></i>&nbsp;Back to top</button>
+      <main class="container">
+          {% block content %}{% endblock content %}
+      </main>
+      <footer>
+        <div class="section">
+          <div class="columns is-flex is-justify-content-space-around">
+            <div class="column is-align-content-center">
+              Copyright <span id="copyright-year"></span> - Priceless App
+            </div>
+            <div class="column has-text-right">
+              <a href="#">Privacy Policy</a> |
+              <a href="#">Cookie Policy</a>
+              <button class="button" id="back-to-top"><i class="fa fa-solid fa-angle-up fw"></i>&nbsp;Back to top</button>
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+
   </body>
 </html>
