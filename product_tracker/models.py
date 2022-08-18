@@ -51,6 +51,15 @@ class Product(models.Model):
 
 
     @classmethod
+    def get_supported_shops(cls):
+        """Returns a list of currently supported shops
+
+        Returns:
+            list of str: supported shop names
+        """
+        return list(map(lambda x: x[0], cls.SHOP_CHOICES))
+
+    @classmethod
     def validate_url(cls, url, user):
         """Checks if a product url is valid"""
         # checks url looks like an url
@@ -64,7 +73,7 @@ class Product(models.Model):
         url_hostname = cls.get_hostname(url)
         # if product model not found, it indicates that the shop of current url is not supported
         if not cls.get_product_model(url_hostname):
-            supported_shops = list(map(lambda x: x[0], cls.SHOP_CHOICES))
+            supported_shops = cls.get_supported_shops()
             raise ProductURLError('URL hostname not currently supported. Currently supported shops include: ' + ','.join(supported_shops))
 
         # check url doens't already exist for user

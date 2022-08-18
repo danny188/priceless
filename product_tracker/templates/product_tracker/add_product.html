@@ -9,12 +9,13 @@
     <div class="columns">
         <div class="column is-8 is-offset-2">
             <h1 class="title">Add Product For Price Tracking</h1>
+            <p>Paste the URL of a product you wish to track below:</p>
             <form id="form-add-product" action="/products/add" method="POST">
 
                 {% csrf_token %}
                 <div class="field is-grouped">
                     <div class="control is-expanded is-one-third">
-                        <input class="input" type="text" id="input-new-url" name="new_url" placeholder="Enter product URL here">
+                        <input class="input" type="text" id="input-new-url" name="new_url" placeholder="Enter/paste product URL here">
                     </div>
 
                     <div class="control">
@@ -31,6 +32,11 @@
                 {% endfor %}
 
             </form>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <p>Supported shops include: {{supported_shops}}</p>
         </div>
     </div>
 </section>

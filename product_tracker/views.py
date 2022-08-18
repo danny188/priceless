@@ -56,6 +56,10 @@ def add_product_view(request):
     Returns:
         HttpResponse: page to add a product
     """
+
+    # pass in current list of supported shops
+    context = {'supported_shops': ','.join(Product.get_supported_shops()),}
+
     if request.method == "POST":
         new_url = request.POST.get("new_url").strip()
 
@@ -79,8 +83,7 @@ def add_product_view(request):
         except ProductURLError as url_error:
             messages.error(request, f"Product could not be added: {url_error.message}", extra_tags="is-danger is-light")
 
-
-    return render(request, "product_tracker/add_product.html")
+    return render(request, "product_tracker/add_product.html", context)
 
 
 @login_required
