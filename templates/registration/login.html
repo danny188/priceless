@@ -14,7 +14,7 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <button type="submit" class="button">Log In</button>
+                <button type="submit" class="is-fullwidth button is-info">Log In</button>
 
                 {% for message in messages %}
                 <div class="notification {{ message.tags }}">
@@ -24,6 +24,16 @@
                 {% endfor %}
             </form>
             {% endif %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+            <p>Forgot your password? <a href="{% url 'password_reset' %}">Reset password here</a></p>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+            <p>New to Priceless? <a href="{% url 'register' %}"><strong>Create account</strong></a></p>
         </div>
     </div>
 </section>
