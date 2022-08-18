@@ -123,3 +123,21 @@ section.filter form {
 #form-add-product {
     margin-top: 10px;
 }
+
+footer, footer a {
+    background-color: #1F1F1F;
+    color: white;
+}
+
+footer .column {
+    line-height: 2.3rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+#back-to-top {
+    margin-left: 10px;
+}

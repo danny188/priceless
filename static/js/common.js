@@ -64,6 +64,13 @@ function getCookie(name) {
     return cookieValue;
 }
 
+/**
+ * Scroll view back to top
+ */
+const goToTop = () => {
+    document.body.scrollIntoView({behavior: "smooth",});
+};
+
 // Functions to open and close a modal
 function openModal($el) {
     $el.classList.add('is-active');
@@ -134,4 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    let copyrightYear = document.querySelector('#copyright-year');
+    if (copyrightYear) {
+        copyrightYear.innerHTML = new Date().getFullYear();
+    }
+
+    let backToTopButton = document.querySelector('#back-to-top');
+    if (backToTopButton) {
+        backToTopButton.addEventListener('click', (event) => {
+            goToTop();
+        });
+    }
 });
