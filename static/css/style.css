@@ -2,6 +2,37 @@ nav {
     margin: 0 15px;
 }
 
+.navbar-item > img { max-height: 4rem; }
+
+.navbar-item {
+    border-radius: 4px;
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-top: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 4rem;
+}
+
+.navbar-item button {
+    vertical-align: middle;
+}
+
+a.navbar-item::before {
+    display: block;
+    content: attr(text);
+    font-weight: bold;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+a.navbar-item:hover {
+    color: #00ADB5;
+    background-color: white;
+    font-weight: bold;
+}
+
 .product-thumbnail {
     margin: 3px;
     border: 1px solid lightblue;
@@ -89,4 +120,6 @@ section.filter form {
     animation-fill-mode: forwards;
 }
 
-
+#form-add-product {
+    margin-top: 10px;
+}

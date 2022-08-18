@@ -33,9 +33,8 @@
 
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io">
-            {% comment %} <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> {% endcomment %}
-            <h1 class="title">Priceless</h1>
+          <a class="navbar-item" href="{{ request.get_host }}">
+            <img src={% static 'img/logo_small.png' %}>
           </a>
 
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main_nav">
@@ -45,46 +44,42 @@
           </a>
         </div>
 
-        <div class="navbar-menu" id="main_nav">
+        <div class="navbar-menu " id="main_nav">
           <div class="navbar-start">
-            <a class="navbar-item">
+            <a class="navbar-item" text="Home">
               Home
             </a>
 
             {% if user.is_authenticated %}
-            <a href={% url 'products-list' %} class="navbar-item">
+            <a href={% url 'products-list' %} class="navbar-item"  text="Products">
               Products
             </a>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href={% url 'add-product' %} class="navbar-item">
+            <a href={% url 'add-product' %} class="navbar-item" text="Add Product">
               Add Product
             </a>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href={% url 'settings' %} class="navbar-item">
+            <a href={% url 'settings' %} class="navbar-item"  text="Settings">
               Settings
             </a>
             {% endif %}
 
-            <a href={% url 'about' %} class="navbar-item">
+            <a href={% url 'about' %} class="navbar-item"  text="About">
               About
             </a>
           </div>
 
 
           <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                {% if user.is_authenticated %}
-                <a href={% url 'logout' %} class="button">Logout ({{ user.email }})</a>
-                {% else %}
-                <a href={% url 'login' %} class="button">Login</a>
-                {% endif %}
-              </div>
-            </div>
+            {% if user.is_authenticated %}
+            <a href={% url 'logout' %} class="navbar-item"><button class="button">Logout ({{ user.email }})</button></a>
+            {% else %}
+            <a href={% url 'login' %} class="navbar-item"><button class="button">Login</button></a>
+            {% endif %}
           </div>
         </div>
       </nav>
