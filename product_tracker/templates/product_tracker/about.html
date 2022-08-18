@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<section class="section title">
+    <div class="columns">
+        <div class="column">
+            <h1 class="title has-text-primary has-text-centered">Save $ On Your Favorite Products</h1>
+            <h4 class="title is-4 has-text-dark has-text-centered">Get notified when products go on sale</h4>
+        </div>
+    </div>
+</section>
+
+<section class="section intro">
+    <div class="columns is-vcentered">
+        <div class="column">
+            <img src="{% static 'img/product_list_screenshot.png' %}">
+        </div>
+        <div class="column">
+            <p><strong>Hi, I'm Daniel and I built this web app to make shopping easier. By creating a free account, you can add products for easy tracking, and receive email notifications when those products go on sale. </strong></p>
+        </div>
+    </div>
+</section>
+
+<section class="section features">
+
+    <div class="columns">
+        <div class="column has-text-centered">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                      <div class="media-content">
+                        <h4 class="title is-4 has-text-danger-dark has-text-centered">Easily view how many products are on sale</h4>
+                      </div>
+                    </div>
+                    <div class="content">
+                    </div>
+
+                </div>
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="{% static 'img/product_count_summary.PNG' %}" alt="Placeholder image" width="400">
+                  </figure>
+                </div>
+            </div>
+        </div>
+
+        <div class="column has-text-centered">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                        <h4 class="title is-4 has-text-danger-dark has-text-centered">On-demand 1-click price updates</h4>
+                        </div>
+                    </div>
+                    <div class="content">
+                    </div>
+
+                </div>
+                <div class="card-image has-text-centered">
+                    <figure class="image">
+                    <img src="{% static 'img/refresh_all_button.PNG' %}" alt="Placeholder image">
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column has-text-centered">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                      <div class="media-content">
+                        <h4 class="title is-4 has-text-danger-dark has-text-centered">Cut and paste URL to add a product</h4>
+                      </div>
+                    </div>
+                    <div class="content">
+                    </div>
+
+                </div>
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="{% static 'img/add_product_screenshot.PNG' %}" alt="Placeholder image" width="400">
+                  </figure>
+                </div>
+            </div>
+        </div>
+
+        <div class="column has-text-centered">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                        <h4 class="title is-4 has-text-danger-dark has-text-centered">Control the frequency and day of emails</h4>
+                        </div>
+                    </div>
+                    <div class="content">
+                    </div>
+
+                </div>
+                <div class="card-image has-text-centered">
+                    <figure class="image">
+                    <img src="{% static 'img/settings_screenshot.PNG' %}" alt="Placeholder image">
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered">
+            <a href="{% url 'register' %}" class="button is-success is-large">Get started now</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered">
+            <h4 class="title is-4 has-text-dark">Enquiries</h4>
+            <p>Email: <a href="mailto:thepricelessapp@gmail.com">thepricelessapp@gmail.com</a></p>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock content %}

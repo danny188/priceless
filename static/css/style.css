@@ -150,3 +150,16 @@ footer a:hover {
 .container {
     min-height: 70vh;
 }
+
+.features img {
+    width: auto;
+}
+
+.features figure {
+    display: inline-block;
+}
+
+.features .card {
+    padding: 10px;
+    height: 300px;
+}

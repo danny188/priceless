@@ -370,3 +370,8 @@ def job_send_daily_product_sale_emails_view(request):
         return JsonResponse({'group_result_id': group_result_id})
     else:
         logger.error("scheduled job (send daily product sale emails): wrong app password used")
+
+
+def about_view(request):
+    """Show landing page of Priceless App"""
+    return render(request, "product_tracker/about.html")

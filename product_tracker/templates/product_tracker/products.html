@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load my_tags %}
+{% load static %}
 {% load render_table from django_tables2 %}
 
 {% block title %}Tracked Products{% endblock %}
 
 {% block content %}
 
-<script src="/static/js/product_tracker.js"></script>
+<script src="{% static 'js/product_tracker.js' %}"></script>
 
 <section class="section summary">
   <h1 class="title has-text-centered">Your Products</h1>
