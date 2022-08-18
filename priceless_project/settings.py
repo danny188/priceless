@@ -147,6 +147,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/products"
+LOGIN_URL = "/login"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"

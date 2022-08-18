@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
+from django.contrib.auth.forms import AuthenticationForm
+from django.forms.widgets import PasswordInput, TextInput
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input'}))
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'input'}))
@@ -21,3 +24,14 @@ class UpdateUserSettingsForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'receive_email_as_products_go_on_sale', 'receive_product_sale_summary_email', 'summary_email_day_of_week']
+
+
+
+
+
+class CustomAuthForm(AuthenticationForm):
+    username = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Enter your email'}))
+    password = forms.CharField(widget=PasswordInput(attrs={'placeholder':'Enter your password'}))
+
+    class Meta:
+        model = User

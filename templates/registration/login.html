@@ -6,7 +6,10 @@
 {% block content %}
 <section class="section">
     <div class="columns">
-        <div class="column is-4 is-offset-4">
+        <div class="column is-6 is-offset-3">
+            {% if user.is_authenticated %}
+            <h5 class="title is-5">You are already logged in as {{ user.email }}</h5>
+            {% else %}
             <h1 class="title">Log In</h1>
             <form method="POST">
                 {% csrf_token %}
@@ -20,6 +23,7 @@
                 </div>
                 {% endfor %}
             </form>
+            {% endif %}
         </div>
     </div>
 </section>
