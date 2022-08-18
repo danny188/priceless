@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/fa590c3c6f.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@1.8.0"></script>
 
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
@@ -34,7 +35,7 @@
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <a class="navbar-item" href="{{ request.get_host }}">
-            <img src={% static 'img/logo_small.png' %}>
+            <img src="{% static 'img/logo_small.png' %}">
           </a>
 
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main_nav">
