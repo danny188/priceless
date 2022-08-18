@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_filters',
     'django_tables2',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
