@@ -52,24 +52,24 @@
             </a>
 
             {% if user.is_authenticated %}
-            <a href="/products" class="navbar-item">
+            <a href={% url 'products-list' %} class="navbar-item">
               Products
             </a>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href="/products/add" class="navbar-item">
+            <a href={% url 'add-product' %} class="navbar-item">
               Add Product
             </a>
             {% endif %}
 
             {% if user.is_authenticated %}
-            <a href="/settings" class="navbar-item">
+            <a href={% url 'settings' %} class="navbar-item">
               Settings
             </a>
             {% endif %}
 
-            <a href="/about" class="navbar-item">
+            <a href={% url 'about' %} class="navbar-item">
               About
             </a>
           </div>

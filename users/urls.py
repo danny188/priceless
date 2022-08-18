@@ -6,6 +6,6 @@ from .forms import CustomAuthForm
 
 urlpatterns = [
     path('register', RegisterView.as_view(), name='register'),
-    path('settings', update_user_settings, name='update-settings'),
+    path('settings', update_user_settings, name='settings'),
     re_path(r'^login/$', auth_views.LoginView.as_view(authentication_form=CustomAuthForm), name='login'),
 ]
