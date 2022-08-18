@@ -1,5 +1,41 @@
+html * {
+    box-sizing: border-box;
+}
+
 nav {
     margin: 0 15px;
+}
+
+.navbar-item > img { max-height: 4rem; }
+
+.navbar-item {
+    border-radius: 4px;
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-top: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 4rem;
+}
+
+.navbar-item button {
+    vertical-align: middle;
+}
+
+.navbar-item a {
+    padding: 8px;
+}
+
+.navbar-item a:visited {
+    color: #4A4A4A;
+}
+
+.navbar-item a:hover {
+    color: #00ADB5;
+    background-color: white;
+    border: 1px solid #00ADB5;
+    border-radius: 5px;
+    margin: -1px;
 }
 
 .product-thumbnail {
@@ -89,4 +125,41 @@ section.filter form {
     animation-fill-mode: forwards;
 }
 
+#form-add-product {
+    margin-top: 10px;
+}
 
+footer, footer a {
+    background-color: #1F1F1F;
+    color: white;
+}
+
+footer .column {
+    line-height: 2.3rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+#back-to-top {
+    margin-left: 10px;
+}
+
+.container {
+    min-height: 70vh;
+}
+
+.features img {
+    width: auto;
+}
+
+.features figure {
+    display: inline-block;
+}
+
+.features .card {
+    padding: 10px;
+    height: 300px;
+}
