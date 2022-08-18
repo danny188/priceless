@@ -30,7 +30,7 @@ nav {
     color: #4A4A4A;
 }
 
-.navbar-item a:hover {
+.navbar-start .navbar-item a:hover {
     color: #00ADB5;
     background-color: white;
     border: 1px solid #00ADB5;

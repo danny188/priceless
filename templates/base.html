@@ -35,7 +35,7 @@
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <a class="navbar-item" href="{% url 'landing' %}">
-            <img src="{% static 'img/logo_small.PNG' %}">
+            <img src="{% static 'img/logo_small.png' %}">
           </a>
 
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main_nav">
@@ -84,11 +84,13 @@
 
 
           <div class="navbar-end">
-            {% if user.is_authenticated %}
-            <a href={% url 'logout' %} class="navbar-item"><button class="button">Logout ({{ user.email }})</button></a>
-            {% else %}
-            <a href={% url 'login' %} class="navbar-item"><button class="button">Login</button></a>
-            {% endif %}
+            <div class="navbar-item">
+              {% if user.is_authenticated %}
+              <a href={% url 'logout' %}><button class="button">Logout ({{ user.email }})</button></a>
+              {% else %}
+              <a href={% url 'login' %}><button class="button">Login</button></a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </nav>
