@@ -125,6 +125,8 @@ class WoolworthsProduct(Product):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
     }
 
+    SHOP_FAVICON_URL = "https://cdn0.woolworths.media/wowssr/syd1/a10/browser/assets/images/favicon.ico?hash=0.0"
+    SHOP_BASE_URL = "https://www.woolworths.com.au/"
 
     @classmethod
     def fetch_data(cls, url):
@@ -169,6 +171,15 @@ class WoolworthsProduct(Product):
         super().__init__(*args, **kwargs)
         self.product_type_by_shop = self.__class__.__name__
         self.shop = 'Woolworths'
+
+
+    def get_shop_favicon_url(self):
+        return self.__class__.SHOP_FAVICON_URL
+
+
+    def get_shop_base_url(self):
+        return self.__class__.SHOP_BASE_URL
+
 
     def get_api_endpoint(self):
         def get_stock_code(url):

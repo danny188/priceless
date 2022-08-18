@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from .models import Product
+from .models import *
 import django.contrib.humanize.templatetags.humanize as humanize
 
 class ProductTable(tables.Table):
@@ -21,7 +21,10 @@ class ProductTable(tables.Table):
     was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
     savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
     savings_dollars = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Savings $")
+    product_type_by_shop = tables.TemplateColumn("${{ record.savings_dollars }}", verbose_name="Shop")
     last_price_check = tables.Column()
+    shop = tables.TemplateColumn('<a href="{{ record.get_shop_base_url }}"><img src="{{ record.get_shop_favicon_url }}"></a>')
+
 
     def render_last_price_check(self, value):
         return humanize.naturaltime(value)
