@@ -27,7 +27,12 @@ class ProductTable(tables.Table):
 
 
     def render_last_price_check(self, value):
-        return humanize.naturaltime(value)
+        """Returns both the exact and humanized version of time of last price check"""
+        exact_datetime = value.strftime('%Y-%m-%d %H:%M')
+        humanized = humanize.naturaltime(value)
+
+        return f"{exact_datetime} ({humanized})"
+
 
     name = tables.TemplateColumn("""
     {% if record.savings_dollars %}
