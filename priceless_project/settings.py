@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'product_tracker',
     'crispy_forms',
     'crispy_bulma',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'django_filters',
     'django_tables2',
     'django.contrib.humanize',
@@ -161,18 +161,18 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-CELERY_BEAT_SCHEDULE = {
-      'add-every-10-seconds': {
-        'task': 'product_tracker.tasks.adding_task',
-        'schedule': 3.0,
-        'args': (16, 16),
-        'options': {
-            'expires': 15.0,
-        },
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#       'add-every-10-seconds': {
+#         'task': 'product_tracker.tasks.adding_task',
+#         'schedule': 3.0,
+#         'args': (16, 16),
+#         'options': {
+#             'expires': 15.0,
+#         },
+#     },
+# }
 
 FILTERS_EMPTY_CHOICE_LABEL = None
 
