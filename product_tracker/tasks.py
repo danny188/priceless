@@ -20,13 +20,12 @@ import time
 
 @shared_task
 def refresh_product(id):
+    """Refresh a single product
+
+    Args:
+        id (int): product id
+    """
     product = Product.objects.get(pk=id)
-
-    c = get_redis().info()['connected_clients']
-    now = datetime.datetime.now()
-
-    print("{} | Active redis connections: {}".format(now, c))
-
 
     try:
         if product.fetch_price():
@@ -34,8 +33,20 @@ def refresh_product(id):
     except ProductURLError:
         pass
 
+
 @shared_task
 def dummy_refresh_product(id):
+    """For debugging redis error of exceeding max number of client connections"""
+    def get_redis():
+        url = os.environ.get("REDIS_URL")
+
+        if url:
+            r = redis.from_url(url)  # use secure for heroku
+        else:
+            r = redis.Redis()  # use unauthed connection locally
+
+        return r
+
     c = get_redis().info()['connected_clients']
     now = datetime.datetime.now()
 
@@ -49,15 +60,21 @@ def dummy_refresh_product(id):
 
 @shared_task
 def refresh_all_products():
+    """Refresh all products in entire database
+
+    Returns:
+        str: Celery group result id for monitoring task state
+    """
     products = Product.objects.all()
 
-    job = group([dummy_refresh_product.s(product.id) for product in products])
+    job = group([refresh_product.s(product.id) for product in products])
 
     result = job.apply_async(expires=120)
 
     result.save()
 
     return result.id
+
 
 @shared_task
 def refresh_all_products_for_user(user):
@@ -71,24 +88,23 @@ def refresh_all_products_for_user(user):
     """
     products = user.product_set.all()
 
-    job = group([dummy_refresh_product.s(product.id) for product in products])
+    job = group([refresh_product.s(product.id) for product in products])
 
     result = job.apply_async(expires=120)
     result.save()
 
     return result.id
 
-    # import time
-    # while True:
-    #     if result.ready():
-    #         break
-    #     time.sleep(0.5)
-    #     print(str(result.completed_count()) + ' tasks out of ' + str(total_tasks) + ' completed.')
-
-
-    # result.join()
 
 def send_product_sale_email_for_user(user, products_on_sale, intro, send_even_if_nothing_on_sale):
+    """Sends a product sale summary email to a user
+
+    Args:
+        user (User): user object
+        products_on_sale (QuerySet): set of on-sale products
+        intro (str): intro text in email
+        send_even_if_nothing_on_sale (bool): whether to send the email anyway even if no products on sale
+    """
     # user = User.objects.get(pk=userId)
 
     table = ProductTableForEmail(products_on_sale)
@@ -167,14 +183,3 @@ def send_daily_product_sale_emails():
     result.save()
 
     return result.id
-
-
-def get_redis():
-    url = os.environ.get("REDIS_URL")
-
-    if url:
-        r = redis.from_url(url)  # use secure for heroku
-    else:
-        r = redis.Redis()  # use unauthed connection locally
-
-    return r
