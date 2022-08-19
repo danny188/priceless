@@ -156,7 +156,7 @@ CRISPY_TEMPLATE_PACK = "bulma"
 
 # celery settings
 CELERY_BROKER_URL = env("CLOUDAMQP_URL")
-CELERY_RESULT_BACKEND = 'db+' + env("DATABASE_URL")
+CELERY_RESULT_BACKEND = 'db+' + env("DATABASE_URL").replace('postgres', 'postgresql')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
