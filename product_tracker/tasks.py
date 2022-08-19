@@ -12,14 +12,37 @@ from django.utils.html import strip_tags
 from users.models import User
 
 from django.utils import timezone
+import redis
+import os
+import datetime
+import time
 
 
 @shared_task
 def refresh_product(id):
     product = Product.objects.get(pk=id)
+
+    c = get_redis().info()['connected_clients']
+    now = datetime.datetime.now()
+
+    print("{} | Active redis connections: {}".format(now, c))
+
+
     try:
         if product.fetch_price():
             product.save()
+    except ProductURLError:
+        pass
+
+@shared_task
+def dummy_refresh_product(id):
+    c = get_redis().info()['connected_clients']
+    now = datetime.datetime.now()
+
+    print("{} | Active redis connections: {}".format(now, c))
+
+    try:
+        time.sleep(6)
     except ProductURLError:
         pass
 
@@ -28,7 +51,7 @@ def refresh_product(id):
 def refresh_all_products():
     products = Product.objects.all()
 
-    job = group([refresh_product.s(product.id) for product in products])
+    job = group([dummy_refresh_product.s(product.id) for product in products])
 
     result = job.apply_async(expires=120)
 
@@ -48,7 +71,7 @@ def refresh_all_products_for_user(user):
     """
     products = user.product_set.all()
 
-    job = group([refresh_product.s(product.id) for product in products])
+    job = group([dummy_refresh_product.s(product.id) for product in products])
 
     result = job.apply_async(expires=120)
     result.save()
@@ -144,3 +167,14 @@ def send_daily_product_sale_emails():
     result.save()
 
     return result.id
+
+
+def get_redis():
+    url = os.environ.get("REDIS_URL")
+
+    if url:
+        r = redis.from_url(url)  # use secure for heroku
+    else:
+        r = redis.Redis()  # use unauthed connection locally
+
+    return r
