@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import about_view, delete_product_view, email_preview, get_progress_view, products_view, add_product_view, products_refresh_all, update_product_url_view, job_update_all_products_view, job_send_product_sale_summary_emails_view, job_send_daily_product_sale_emails_view, refresh_single_product_view
+from .views import about_view, delete_product_view, get_progress_view, products_view, add_product_view, products_refresh_all, update_product_url_view, job_update_all_products_view, job_send_product_sale_summary_emails_view, job_send_daily_product_sale_emails_view, refresh_single_product_view
 
 
 urlpatterns = [
