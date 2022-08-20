@@ -1,4 +1,5 @@
 {% load render_table from django_tables2 %}
+{% load static %}
 
 <!doctype html>
 
@@ -9,19 +10,33 @@
 </head>
 
 <body>
-    {% if name %}
-    <p>Hi {{ name }},</p>
-    {% else %}
-    <p>Hi,</p>
-    {% endif %}
+    <div style="text-align: center;">
+        <img class="center" src="{% static 'img/logo_small.PNG'%}" alt="priceless app logo">
+    </div>
+    <div style="max-width: 70%; margin: 30px auto 0;">
+        {% if name %}
+        <p style="font-size: 20px;">Hi {{ name }},</p>
+        {% else %}
+        <p>Hi,</p>
+        {% endif %}
 
-    {% if num_products_on_sale > 0 %}
-    <p>{{ intro }}</p>
+        {% if num_products_on_sale > 0 %}
+        <p style="font-size: 20px;">{{ intro }}</p>
 
-    {% render_table products_table %}
-    {% else %}
-    <p>None of your products are on sale at the moment.</p>
-    {% endif %}
+        {% render_table products_table %}
+        {% else %}
+        <p style="font-size: 20px;">None of your products are on sale at the moment.</p>
+        {% endif %}
+    </div>
 
+    <div style="max-width: 70%; margin: 30px auto 0;">
+        <p style="font-size: 18px;">Need to update which products to track? <a href=""><button style="padding: 5px; font-size: 18px;">Go to products list</button></a></p>
+    </div>
+
+    <div style="margin-top: 50px; background-color: #EEEEEE; padding: 20px; text-align: center;">
+        <p style="font-size: 18px;">Want to change how you receive these emails?</p>
+        <p style="font-size: 18px; margin-top: -10px">You can <a href="">update your preferences</a> or <a href="">unsubscribe from all emails.</a></p>
+
+    </div>
 </body>
 </html>

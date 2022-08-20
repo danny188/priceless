@@ -97,6 +97,7 @@ class ProductTableForEmail(tables.Table):
     was_price = tables.TemplateColumn("${{ record.was_price }}", verbose_name="Old Price")
     savings_percentage = tables.TemplateColumn("{{ record.savings_percentage }}%", verbose_name="Savings %")
     last_price_check = tables.TemplateColumn("{{ record.last_price_check|date:'Y-m-d H:i' }}")
+    shop = tables.TemplateColumn('<a href="{{ record.get_shop_base_url }}"><img title="{{record.shop}}" src="{{ record.get_shop_favicon_url }}"></a>')
 
     name = tables.TemplateColumn("""
         <a href="{{record.url}}"><strong>{{ record.name }}</strong></a>
@@ -110,4 +111,7 @@ class ProductTableForEmail(tables.Table):
         sequence = ('image', 'name', 'shop', 'price', 'was_price', 'savings_percentage', 'last_price_check')
 
         attrs = {"border": "1", "style": "border-color: grey; border-collapse:collapse; padding: 5px;",
-                  'td': {'style': 'padding: 5px;'}}
+                  'td': {'style': 'padding: 5px;'},}
+        row_attrs = {
+            'style': 'font-size: 18px;',
+        }
