@@ -78,6 +78,12 @@ function openModal($el) {
 
 function closeModal($el) {
     $el.classList.remove('is-active');
+
+    // stop embedded video if this modal contains video
+    let iframe = $el.querySelector('iframe');
+    if (iframe) {
+        iframe.setAttribute('src', iframe.getAttribute('src'));
+    }
 }
 
 function closeAllModals() {
@@ -141,15 +147,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // update copyright year to current year
     let copyrightYear = document.querySelector('#copyright-year');
     if (copyrightYear) {
         copyrightYear.innerHTML = new Date().getFullYear();
     }
 
+    // back to top button
     let backToTopButton = document.querySelector('#back-to-top');
     if (backToTopButton) {
         backToTopButton.addEventListener('click', (event) => {
             goToTop();
         });
+    }
+
+    // demo video play button
+    let demoVideoPlayButton = document.querySelector('#demo-video-play-button');
+    if (demoVideoPlayButton) {
+        demoVideoPlayButton.addEventListener('click', (event) => {
+            document.querySelector('#demo-video-modal').classList.add('is-active');
+        })
     }
 });

@@ -4,6 +4,15 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
+
+<div class="modal" id="demo-video-modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/MFuwkrseXVE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
 <section class="section title">
     <div class="columns">
         <div class="column">
@@ -16,7 +25,10 @@
 <section class="section intro">
     <div class="columns is-vcentered">
         <div class="column">
-            <img src="{% static 'img/product_list_screenshot.PNG' %}">
+            <div class="demo-video-thumbnail">
+                <img src="{% static 'img/product_list_screenshot.PNG' %}">
+                <img src="{% static 'img/play-button.png' %}" id="demo-video-play-button">
+            </div>
         </div>
         <div class="column">
             <p><strong>Hi, I'm Daniel and I built this web app to make shopping easier. By creating a free account, you can add products for easy tracking, and receive email notifications when those products go on sale. </strong></p>
@@ -32,7 +44,7 @@
                 <div class="card-content">
                     <div class="media">
                       <div class="media-content">
-                        <h4 class="title is-4 has-text-danger-dark has-text-centered">Easily view how many products are on sale</h4>
+                        <h4 class="title is-4 has-text-danger-dark has-text-centered">Receive emails when products go on sale</h4>
                       </div>
                     </div>
                     <div class="content">
@@ -41,7 +53,7 @@
                 </div>
                 <div class="card-image">
                   <figure class="image">
-                    <img src="{% static 'img/product_count_summary.PNG' %}" alt="screenshot of product count summaries" width="400">
+                    <img src="{% static 'img/product_sale_email_screenshot.PNG' %}" alt="screenshot of product count summaries" width="400">
                   </figure>
                 </div>
             </div>
