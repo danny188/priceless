@@ -375,3 +375,19 @@ def job_send_daily_product_sale_emails_view(request):
 def about_view(request):
     """Show landing page of Priceless App"""
     return render(request, "product_tracker/about.html")
+
+
+# def email_preview(request):
+#     """For development use: previews product sale email for current user"""
+#     from .tables import ProductTableForEmail
+#     user = request.user
+#     products_on_sale = user.product_set.filter(on_sale=True).filter(sale_notified_to_user=False)
+
+#     table = ProductTableForEmail(products_on_sale)
+#     num_products_on_sale = products_on_sale.count()
+#     context = {'products_table': table,
+#                'intro': "Here are the products currently on sale:",
+#                'name': user.first_name,
+#                'num_products_on_sale': num_products_on_sale}
+
+#     return render(request, "product_tracker/product_sale_email_template.html", context)
