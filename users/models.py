@@ -57,3 +57,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def unsubscribe_all(self):
+        self.receive_email_as_products_go_on_sale = False
+        self.receive_product_sale_summary_email = False

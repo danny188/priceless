@@ -1,14 +1,18 @@
+from django.urls import reverse
 import os
 from dataclasses import field
 from difflib import restore
+from pickletools import read_uint1
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from product_tracker.exceptions import ProductURLError
 from product_tracker.helpers import format_time_delta
 from product_tracker.models import WoolworthsProduct, Product
 from django.core.paginator import Paginator
 from django.contrib import messages
+
+from django.contrib.auth.hashers import check_password
 
 from product_tracker.tables import ProductTable
 from .tasks import refresh_all_products, refresh_all_products_for_user, send_product_sale_summary_emails, send_daily_product_sale_emails
@@ -24,9 +28,12 @@ from urllib.parse import urlparse
 from django.utils import timezone
 from datetime import timedelta
 
+from .helpers import generate_product_sale_email_for_user
+
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 @login_required
 def products_view(request):
@@ -378,17 +385,53 @@ def about_view(request):
     return render(request, "product_tracker/about.html")
 
 
-# def email_preview(request):
-#     """For development use: previews product sale email for current user"""
-#     from .tables import ProductTableForEmail
-#     user = request.user
-#     products_on_sale = user.product_set.filter(on_sale=True).filter(sale_notified_to_user=False)
+def email_preview_view(request):
+    """For development use: previews product sale email for current user"""
+    # from .tables import ProductTableForEmail
+    user = request.user
+    products_on_sale = user.product_set.filter(on_sale=True)
+    intro = "Here are the products currently on sale:"
 
-#     table = ProductTableForEmail(products_on_sale)
-#     num_products_on_sale = products_on_sale.count()
-#     context = {'products_table': table,
-#                'intro': "Here are the products currently on sale:",
-#                'name': user.first_name,
-#                'num_products_on_sale': num_products_on_sale}
+    # table = ProductTableForEmail(products_on_sale)
+    # num_products_on_sale = products_on_sale.count()
+    # context = {'products_table': table,
+    #            'intro': "Here are the products currently on sale:",
+    #            'name': user.first_name,
+    #            'num_products_on_sale': num_products_on_sale}
 
-#     return render(request, "product_tracker/product_sale_email_template.html", context)
+    email = generate_product_sale_email_for_user(user, products_on_sale, intro)
+    html_email = email['html_message']
+
+    return HttpResponse(html_email)
+    return render(request, "product_tracker/product_sale_email_template.html", context)
+
+
+def unsubscribe_confirm_view(request):
+    context = {
+        'unsubscribe_email': request.GET.get('email'),
+        'unsubscribe_token': request.GET.get('unsubscribe_token'),
+    }
+    return render(request, "product_tracker/unsubscribe_confirm.html", context)
+
+
+def unsubscribe_emails_view(request):
+    unsubscribe_token = request.POST.get('unsubscribe-token')
+    unsubscribe_email = request.POST.get('unsubscribe-email')
+
+    if request.method == "POST":
+        if (check_password(unsubscribe_email + os.environ.get('APP_PASSWORD', 'secret'), unsubscribe_token)):
+            # todo: unsub all email for user
+            user = User.objects.get(email=unsubscribe_email)
+            user.receive_email_as_products_go_on_sale = False
+            user.unsubscribe_all()
+            user.save()
+            return render(request, "product_tracker/unsubscribe_done.html")
+        else:
+            context = {
+                'unsubscribe_email': unsubscribe_email,
+                'unsubscribe_token': unsubscribe_token,
+            }
+
+            messages.warning(request, "Invalid unsubscribe token supplied", extra_tags="is-warning is-light")
+            return render(request, "product_tracker/unsubscribe_confirm.html", context)
+

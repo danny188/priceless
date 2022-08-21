@@ -1,14 +1,11 @@
 from pydoc import plain
 from celery import shared_task, group
-from django.http import HttpResponse, JsonResponse
+
 from product_tracker.exceptions import ProductURLError
+from .helpers import send_product_sale_email_for_user
 
 from product_tracker.models import Product
-from .tables import ProductTableForEmail
 
-from django.core import mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from users.models import User
 
 from django.utils import timezone
@@ -96,45 +93,6 @@ def refresh_all_products_for_user(user):
     return result.id
 
 
-def send_product_sale_email_for_user(user, products_on_sale, intro, send_even_if_nothing_on_sale):
-    """Sends a product sale summary email to a user
-
-    Args:
-        user (User): user object
-        products_on_sale (QuerySet): set of on-sale products
-        intro (str): intro text in email
-        send_even_if_nothing_on_sale (bool): whether to send the email anyway even if no products on sale
-    """
-    # user = User.objects.get(pk=userId)
-
-    table = ProductTableForEmail(products_on_sale)
-    num_products_on_sale = products_on_sale.count()
-
-    context = {'products_table': table,
-               'intro': intro,
-               'name': user.first_name,
-               'num_products_on_sale': num_products_on_sale}
-
-    html_message = render_to_string('product_tracker/product_sale_email_template.html', context)
-
-    def generatePlainTextMessage():
-        msg = f"Hi {user.first_name},\n\n" if user.first_name else ""
-
-        msg = msg + intro + "\n\n"
-
-        for product in products_on_sale:
-            msg = msg + f"{product.name} ({product.shop}) - Current price: ${product.current_price}, Savings: {product.savings_percentage}%\n"
-
-            # indicate sale has been notified to the user
-            product.sale_notified_to_user = True
-            product.save()
-
-        return msg
-
-    plain_message = generatePlainTextMessage()
-
-    if send_even_if_nothing_on_sale or num_products_on_sale > 0:
-        mail.send_mail("Priceless Updates", plain_message, from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=html_message)
 
 
 @shared_task

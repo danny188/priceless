@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Unsubscribe from all emails{% endblock %}
+
+{% block content %}
+<script src="/static/js/product_tracker.js"></script>
+
+<section class="section add-product">
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <h1 class="title">Unsubscribe from all emails</h1>
+            <p>Please confirm below to unsubscribe from all email notifications. You can also update email notification preferences in <a href="{% url 'settings' %}">account settings</a>.</p>
+            <form id="form-add-product" action="{% url 'unsubscribe-emails' %}" method="POST">
+
+                {% csrf_token %}
+                <div class="field">
+                    <input type="hidden" name="unsubscribe-token" value="{{unsubscribe_token}}">
+                    <input type="hidden" name="unsubscribe-email" value="{{unsubscribe_email}}">
+                </div>
+                <div class="field">
+                    <button type="submit" class="button is-info">Unsubscribe from all emails</button>
+                </div>
+
+                {% for message in messages %}
+                <div class="notification {{ message.tags }}">
+                    <a class="delete" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

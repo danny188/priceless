@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import about_view, delete_product_view, get_progress_view, products_view, add_product_view, products_refresh_all, update_product_url_view, job_update_all_products_view, job_send_product_sale_summary_emails_view, job_send_daily_product_sale_emails_view, refresh_single_product_view
+from .views import about_view, delete_product_view, get_progress_view, products_view, add_product_view, products_refresh_all, unsubscribe_confirm_view, unsubscribe_emails_view, update_product_url_view, job_update_all_products_view, job_send_product_sale_summary_emails_view, job_send_daily_product_sale_emails_view, refresh_single_product_view, email_preview_view
 
 
 urlpatterns = [
@@ -16,5 +16,7 @@ urlpatterns = [
     path('job/senddailyproductsaleemails', job_send_daily_product_sale_emails_view, name='job-send-daily-product-sale-emails'),
     path('about', about_view, name='about'),
     path('', about_view, name='landing'),
-    # path('email_preview', email_preview, name='email-preview'),
+    path('email_preview', email_preview_view, name='email-preview'),
+    path('unsubscribe_confirm', unsubscribe_confirm_view, name='unsubscribe-confirm'),
+    path('unsubscribe', unsubscribe_emails_view, name='unsubscribe-emails'),
 ]
