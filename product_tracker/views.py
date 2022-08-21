@@ -81,6 +81,7 @@ def add_product_view(request):
 
             messages.success(request, product.name + ' has been added.', extra_tags="is-success is-light")
         except ProductURLError as url_error:
+            product.delete()
             messages.error(request, f"Product could not be added: {url_error.message}", extra_tags="is-danger is-light")
 
     return render(request, "product_tracker/add_product.html", context)
