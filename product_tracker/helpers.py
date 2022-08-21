@@ -89,7 +89,8 @@ def generate_product_sale_email_for_user(user, products_on_sale, intro):
                'intro': intro,
                'name': user.first_name,
                'num_products_on_sale': num_products_on_sale,
-               'unsubscribe_link': unsubscribe_link}
+               'unsubscribe_link': unsubscribe_link,
+               'base_url': os.environ.get("BASE_URL", ""),}
 
     html_message = render_to_string('product_tracker/product_sale_email_template.html', context)
 

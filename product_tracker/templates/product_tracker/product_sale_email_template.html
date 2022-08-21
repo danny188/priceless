@@ -11,9 +11,9 @@
 
 <body>
     <div style="text-align: center;">
-        <img class="center" src="{% static 'img/logo_small.PNG'%}" alt="priceless app logo">
+        <img class="center" src="{{base_url}}{% static 'img/logo_small.PNG'%}" alt="priceless app logo">
     </div>
-    <div style="max-width: 70%; margin: 30px auto 0;">
+    <div style="margin: 30px auto 0;">
         {% if name %}
         <p style="font-size: 20px;">Hi {{ name }},</p>
         {% else %}
@@ -29,13 +29,13 @@
         {% endif %}
     </div>
 
-    <div style="max-width: 70%; margin: 30px auto 0;">
+    <div style="margin: 30px auto 0;">
         <p style="font-size: 18px;">Need to update which products to track? <a href=""><button style="padding: 5px; font-size: 18px;">Go to products list</button></a></p>
     </div>
 
     <div style="margin-top: 50px; background-color: #EEEEEE; padding: 20px; text-align: center;">
         <p style="font-size: 18px;">Want to change how you receive these emails?</p>
-        <p style="font-size: 18px; margin-top: -10px">You can <a href="{% url 'settings' %}">update your preferences</a> or <a href="{{unsubscribe_link}}">unsubscribe from all emails.</a></p>
+        <p style="font-size: 18px; margin-top: -10px">You can <a href="{{base_url}}{% url 'settings' %}">update your preferences</a> or <a href="{{base_url}}{{unsubscribe_link}}">unsubscribe from all emails.</a></p>
 
     </div>
 </body>
