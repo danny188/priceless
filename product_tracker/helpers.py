@@ -45,7 +45,7 @@ def send_product_sale_email_for_user(user, products_on_sale, intro, send_even_if
         intro (str): intro text in email
         send_even_if_nothing_on_sale (bool): whether to send the email anyway even if no products on sale
     """
-    email = generate_product_sale_email_for_user(user, products_on_sale, intro, send_even_if_nothing_on_sale)
+    email = generate_product_sale_email_for_user(user, products_on_sale, intro)
 
     if send_even_if_nothing_on_sale or products_on_sale.count() > 0:
         mail.send_mail("Priceless Updates", email['plain_message'], from_email="thepricelessapp@gmail.com", recipient_list=[user.email], html_message=email['html_message'])
