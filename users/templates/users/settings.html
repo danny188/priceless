@@ -17,7 +17,7 @@
                 {{ form|crispy }}
 
                 <div class="field">
-                    <button type="submit" class="button is-info">Save</button>
+                    <button type="submit" class="button is-info">Save Settings</button>
                 </div>
 
                 {% for message in messages %}
@@ -26,11 +26,16 @@
                     {{ message }}
                 </div>
                 {% endfor %}
-
             </form>
-
         </div>
+    </div>
+</section>
 
+<section class="section">
+    <div class="columns">
+        <div class="column is-4 is-offset-4">
+            <a class="button is-danger" href="{% url 'delete-account-confirm' %}">Delete Account</a>
+        </div>
     </div>
 </section>
 

@@ -2,6 +2,11 @@ html * {
     box-sizing: border-box;
 }
 
+p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 nav {
     margin: 0 15px;
 }

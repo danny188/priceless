@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Confirm Delete Account{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+        <h1 class="title">Confirm Account Deletion</h1>
+            <p>Your account will be permanently deleted along with your tracked products. This action cannot be reversed.</p>
+            <p>If you wish to go ahead with account deletion, please enter your email ({{request.user.email}}) below to confirm:</p>
+
+            <form method="POST" action="{% url 'delete-account' %}">
+                {% csrf_token %}
+
+                <div class="field">
+                    <div class="control">
+                        <input type="email" class="input" name="confirm-email" placeholder="Enter your email address to confirm account deletion" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <button type="submit" class="button is-danger">Delete My Account</button>
+                </div>
+
+                {% for message in messages %}
+                <div class="notification {{ message.tags }}">
+                    <a class="delete" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}
