@@ -2,6 +2,11 @@ html * {
     box-sizing: border-box;
 }
 
+p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 nav {
     margin: 0 15px;
 }
@@ -155,11 +160,37 @@ footer a:hover {
     width: auto;
 }
 
+.features .card {
+    overflow: clip;
+}
+
 .features figure {
     display: inline-block;
 }
 
 .features .card {
     padding: 10px;
-    height: 300px;
+    height: 350px;
+}
+
+section.intro {
+    position: relative;
+}
+
+#demo-video-play-button {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 96px;
+    height: 96px;
+  }
+
+#demo-video-play-button:hover {
+    opacity: 50%;
+    cursor: pointer;
+}
+
+div.demo-video-thumbnail {
+    display: inline-block;
+    position: relative;
 }
