@@ -1,15 +1,10 @@
-from django.urls import reverse
 import os
-from dataclasses import field
-from difflib import restore
-from pickletools import read_uint1
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from product_tracker.exceptions import ProductURLError
 from product_tracker.helpers import format_time_delta
-from product_tracker.models import WoolworthsProduct, Product
-from django.core.paginator import Paginator
+from product_tracker.models import Product
 from django.contrib import messages
 
 from django.contrib.auth.hashers import check_password
@@ -407,6 +402,7 @@ def email_preview_view(request):
 
 
 def unsubscribe_confirm_view(request):
+    """Returns the page to confirmi unsubscribe from emails"""
     context = {
         'unsubscribe_email': request.GET.get('email'),
         'unsubscribe_token': request.GET.get('unsubscribe_token'),
@@ -415,6 +411,8 @@ def unsubscribe_confirm_view(request):
 
 
 def unsubscribe_emails_view(request):
+    """Unsubscribes a user from all emails"""
+
     unsubscribe_token = request.POST.get('unsubscribe-token')
     unsubscribe_email = request.POST.get('unsubscribe-email')
 

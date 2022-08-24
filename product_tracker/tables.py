@@ -3,6 +3,8 @@ from .models import *
 import django.contrib.humanize.templatetags.humanize as humanize
 
 class ProductTable(tables.Table):
+    """Table to display products on the main products list"""
+
     image = tables.TemplateColumn("""
     {% if record.image_url %}
     <a href="{{record.url}}">
@@ -85,6 +87,8 @@ class ProductTable(tables.Table):
 
 
 class ProductTableForEmail(tables.Table):
+    """Table to display products in email notifications"""
+
     image = tables.TemplateColumn("""
     {% if record.image_url %}
     <a href="{{record.url}}">

@@ -21,6 +21,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Product(models.Model):
+    """Represents a product
+
+    Raises:
+        ProductURLError: any errors related to a product's url or api endpoint
+    """
     MAX_REFRESH_FREQUENCY = 5  # limit to every 5 minutes at most
 
     on_sale = models.BooleanField(default=False)
@@ -41,11 +46,20 @@ class Product(models.Model):
 
     @classmethod
     def get_hostname(cls, url):
+        """Returns the hostname from a url"""
         return urlparse(url).hostname.replace('www.', '')
 
 
     @classmethod
     def get_product_model(cls, hostname):
+        """Returns the class name of a particular shop's product
+
+        Args:
+            hostname (str): hostname of a product's shop
+
+        Returns:
+            type: class of a particular shop's product
+        """
         if hostname == 'woolworths.com.au':
             return WoolworthsProduct
 
@@ -94,12 +108,14 @@ class Product(models.Model):
 
 
     def calculate_savings_dollars(self):
+        """Returns the savings amount in dollars rounded to 2 decimal places"""
         if self.was_price and self.current_price:
             return round(abs(self.was_price - self.current_price), 2)
         else:
             return 0
 
     def calculate_savings_percentage(self):
+        """Returns the savings as a percentage rounded to nearest integer"""
         if self.was_price and self.current_price:
             return round(self.calculate_savings_dollars() / self.was_price * 100)
         else:
@@ -109,6 +125,8 @@ class Product(models.Model):
 
 
 class WoolworthsProduct(Product):
+    """Represents a product from Woolworths"""
+
     class Meta:
         proxy = True
 
@@ -130,19 +148,24 @@ class WoolworthsProduct(Product):
 
     @classmethod
     def fetch_data(cls, url):
-        # def is_json(data):
-        #     try:
-        #         json.loads(data)
-        #     except ValueError:
-        #         return False
-        #     return True
+        """Requests product data from an api endpoint
+
+        Args:
+            url (str): api endpoint for product data
+
+        Raises:
+            ProductURLError: errors related to api endpoint responses
+
+        Returns:
+            json: product data
+        """
 
         proxies = {
             'https': env('MY_HTTPS_PROXY'),
         }
         logger.info('request sent to url endpoint: ' + url)
 
-        # for enabling logs of requests module
+        # debug: for enabling logs of requests module
         # logging.basicConfig()
         # logging.getLogger().setLevel(logging.DEBUG)
         # requests_log = logging.getLogger("requests.packages.urllib3")
@@ -182,7 +205,10 @@ class WoolworthsProduct(Product):
 
 
     def get_api_endpoint(self):
+        """Returns the woolworths api endpoint from a product url"""
+
         def get_stock_code(url):
+            """Extracts the stock code from a product url"""
             pattern = r"woolworths.com.au/shop/productdetails/(\d*)?"
             match = re.search(pattern, url)
             if match:
@@ -197,6 +223,7 @@ class WoolworthsProduct(Product):
 
 
     def parse_data(self, json_obj):
+        """Extracts product data and saves to the product object"""
         self.current_price = json_obj['Product']['Price']
         self.name = json_obj['Product']['Name']
         self.was_price = json_obj['Product']['WasPrice']
@@ -216,6 +243,7 @@ class WoolworthsProduct(Product):
 
 
     def fetch_price(self):
+        """Updates the product's price from the saved url"""
         api_endpoint = self.get_api_endpoint()
         json_obj = self.__class__.fetch_data(api_endpoint)
 

@@ -13,7 +13,8 @@ class RegisterView(generic.CreateView):
 
 
 @login_required
-def update_user_settings(request):
+def update_user_settings_view(request):
+    """Display or updates user settings"""
     if request.method == 'POST':
         form = UpdateUserSettingsForm(request.POST, instance=request.user)
 
@@ -29,6 +30,7 @@ def update_user_settings(request):
 
 @login_required
 def delete_account_confirm_view(request):
+    """Shows page to confirm account deletion"""
     return render(request, "users/delete_account_confirm.html")
 
 
