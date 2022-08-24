@@ -4,8 +4,11 @@ let productsTable;
 
 document.addEventListener('DOMContentLoaded', () => {
     // display loading bar when refresh all products button clicked
-    if (document.querySelector('#refresh-all-products')) {
-        document.querySelector('#refresh-all-products').addEventListener('click', (event) => {
+    let refreshAllProductsButton = document.querySelector('#refresh-all-products');
+    if (refreshAllProductsButton) {
+        refreshAllProductsButton.addEventListener('click', (event) => {
+            refreshAllProductsButton.classList.add("is-loading");
+
             event.preventDefault();
             let total;
             let completed_count = 0;
@@ -16,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.querySelector('#update-time-taken')) {
                 document.querySelector('#update-time-taken').classList.add('is-hidden');
             }
-
-
 
             progressBar.classList.remove('is-hidden');
 
